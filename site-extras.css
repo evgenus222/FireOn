@@ -1,0 +1,233 @@
+/* === Общие улучшения для мобильных === */
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 7.5rem;
+    }
+
+    header {
+        padding: 0.75rem 0;
+    }
+
+    nav {
+        padding: 0 1rem !important;
+        gap: 0.75rem;
+    }
+
+    .logo {
+        font-size: 1.65rem !important;
+        letter-spacing: 1px;
+    }
+
+    nav ul {
+        gap: 0.65rem 1.2rem !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li a {
+        font-size: 0.9rem;
+        padding: 0.35rem 0;
+    }
+
+    .section {
+        padding: 3rem 1rem !important;
+    }
+
+    .section h2 {
+        font-size: clamp(1.6rem, 6vw, 2.4rem) !important;
+    }
+
+    .hero {
+        margin: 1rem !important;
+        padding: 2rem 1.25rem !important;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
+        letter-spacing: 1px;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .cta {
+        min-width: unset !important;
+        width: 100%;
+        max-width: 320px;
+        padding: 1rem 1.5rem;
+    }
+
+    @media (hover: none) {
+        .cta:hover .btn-text,
+        .cta .btn-text {
+            transform: none;
+            opacity: 1;
+        }
+        .cta:hover .ip-text,
+        .cta .ip-text {
+            transform: none;
+            opacity: 1;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+    }
+
+    .gallery-item {
+        min-width: min(85vw, 280px) !important;
+        max-width: min(85vw, 280px) !important;
+    }
+
+    .gallery-nav.left { left: 6px; }
+    .gallery-nav.right { right: 6px; }
+
+    .donate {
+        margin: 1.5rem 1rem !important;
+        padding: 2rem 1.25rem !important;
+    }
+
+    .contact-info {
+        padding: 1.5rem !important;
+        margin: 0 0.5rem;
+    }
+
+    .contact-info p {
+        font-size: 0.95rem;
+        word-break: break-word;
+    }
+
+    footer {
+        padding: 1.75rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    nav ul {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* === Пасхалка === */
+.egg-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: 0.35rem;
+    border-radius: 50%;
+    background: rgba(255, 106, 0, 0.25);
+    cursor: default;
+    vertical-align: middle;
+    transition: background 0.3s ease;
+}
+
+.egg-dot:hover {
+    background: rgba(255, 106, 0, 0.5);
+}
+
+.egg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.egg-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.egg-game {
+    background: linear-gradient(145deg, #141414, #1e1e1e);
+    border: 2px solid #FF6A00;
+    border-radius: 16px;
+    padding: 1.25rem;
+    max-width: 340px;
+    width: 100%;
+    box-shadow: 0 0 40px rgba(255, 106, 0, 0.25);
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.egg-game h3 {
+    font-family: 'Helvetica Inserat LT Pro', sans-serif;
+    color: #FF6A00;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.egg-game p {
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.egg-stats {
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.egg-field {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #0a0a0a;
+    border-radius: 10px;
+    border: 1px solid #333;
+    overflow: hidden;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+.egg-spark {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #FF6A00 45%, transparent 70%);
+    cursor: pointer;
+    animation: egg-pulse 0.8s ease infinite alternate;
+    box-shadow: 0 0 12px rgba(255, 106, 0, 0.8);
+}
+
+@keyframes egg-pulse {
+    from { transform: scale(0.9); opacity: 0.85; }
+    to { transform: scale(1.1); opacity: 1; }
+}
+
+.egg-close {
+    margin-top: 0.75rem;
+    padding: 0.5rem 1.2rem;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.egg-close:hover {
+    border-color: #FF6A00;
+    color: #FF6A00;
+}
