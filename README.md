@@ -1,0 +1,2 @@
+# FireOn
+Сайт сервера FireOn
