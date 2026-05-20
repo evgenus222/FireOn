@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FIREON - Тёмный мир</title>
+    <link rel="stylesheet" href="site-extras.css">
     <style>
         /* === ПОДКЛЮЧЕНИЕ ЛОКАЛЬНЫХ ШРИФТОВ === */
         @font-face {
@@ -451,7 +452,7 @@
             </button>
         </div>
         <div class="hero-image">
-            <img src="lis.png" alt="FIREON">
+            <img src="Lis.png" alt="FIREON">
         </div>
     </section>
 
@@ -494,7 +495,8 @@
         document.querySelectorAll('.gallery-item').forEach(i => observer.observe(i));
 
         function scrollGallery(d) {
-            document.getElementById('gallery').scrollBy({ left: d * 340, behavior: 'smooth' });
+            const step = window.innerWidth < 768 ? Math.min(window.innerWidth * 0.85, 280) + 24 : 340;
+            document.getElementById('gallery').scrollBy({ left: d * step, behavior: 'smooth' });
         }
 
         const btn = document.getElementById('connectBtn');
@@ -512,8 +514,12 @@
 
         document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
             e.preventDefault();
-            document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            const target = document.querySelector(a.getAttribute('href'));
+            if (!target) return;
+            const y = target.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: y, behavior: 'smooth' });
         }));
     </script>
+    <script src="site-extras.js"></script>
 </body>
 </html>
