@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIREON - Тёмный мир</title>
+    <style>
+        /* === ПОДКЛЮЧЕНИЕ ЛОКАЛЬНЫХ ШРИФТОВ === */
+        @font-face {
+            font-family: 'PL Behemoth';
+            src: url('fonts/PLBehemoth-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Helvetica Inserat LT Pro';
+            src: url('fonts/HelveticaInseratLTPro-Roman.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Основной шрифт — PL Behemoth */
+        body {
+            font-family: 'PL Behemoth', sans-serif;
+            line-height: 1.7;
+            color: #e0e0e0;
+            background: #0a0a0a;
+            padding-top: 90px;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 106, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 106, 0, 0.03) 0%, transparent 50%);
+        }
+
+        header {
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2a2a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Заголовки — Helvetica Inserat LT Pro */
+        .logo {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 2.3rem;
+            font-weight: 400;
+            color: #FF6A00;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1.5px;
+            background: #FF6A00;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        nav ul li a:hover {
+            color: #FF6A00;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(255, 106, 0, 0.08);
+            gap: 4rem;
+            border: 1px solid #2a2a2a;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .hero h1 {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 3.5rem;
+            color: #FF6A00;
+            margin-bottom: 1.2rem;
+            letter-spacing: 2.5px;
+            line-height: 1.1;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #bbb;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, #FF6A00, #e55a00);
+            color: white;
+            padding: 1.1rem 2.8rem;
+            border: 2px solid #FF6A00;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 
+                0 6px 20px rgba(255, 106, 0, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            min-width: 260px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            font-family: 'PL Behemoth', sans-serif;
+            letter-spacing: 1.2px;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta:hover::before { left: 100%; }
+        .cta:hover {
+            background: linear-gradient(135deg, #FF8C33, #FF6A00);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 25px rgba(255, 106, 0, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            border-color: #FF8C33;
+        }
+
+        .cta .btn-text { display: block; transition: transform 0.3s ease, opacity 0.3s ease; }
+        .cta .ip-text { 
+            display: block; 
+            transform: translateX(100%); 
+            opacity: 0; 
+            font-family: 'Courier New', monospace; 
+            font-weight: bold;
+            color: white;
+            transition: transform 0.3s ease, opacity 0.3s ease; 
+        }
+        .cta:hover .btn-text { transform: translateX(-100%); opacity: 0; }
+        .cta:hover .ip-text { transform: translateX(0); opacity: 1; }
+
+        .cta.copied {
+            background: #2d6a2d !important;
+            color: white;
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+        .hero-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 460px;
+            height: auto;
+            border-radius: 16px;
+            border: none;
+            box-shadow: none;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 2.9rem;
+            color: #FF6A00;
+            margin-bottom: 2.5rem;
+            position: relative;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .section h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #FF6A00, transparent);
+            margin: 1.2rem auto 0;
+        }
+
+        .world-gallery {
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            background: #1a1a1a;
+            padding: 1.8rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #2a2a2a;
+        }
+
+        .gallery-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 0 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: #FF6A00 #2a2a2a;
+        }
+
+        .gallery-container::-webkit-scrollbar { height: 8px; }
+        .gallery-container::-webkit-scrollbar-track { background: #2a2a2a; border-radius: 10px; }
+        .gallery-container::-webkit-scrollbar-thumb { background: #FF6A00; border-radius: 10px; }
+
+        .gallery-item {
+            min-width: 320px;
+            max-width: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transition: transform 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+        .gallery-item:hover { transform: scale(1.03); }
+
+        .gallery-item img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            display: block;
+        }
+
+        .gallery-item .caption {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 1rem;
+            font-size: 1rem;
+            text-align: center;
+            border-top: 1px solid #333;
+            font-weight: 400;
+            font-family: 'PL Behemoth', sans-serif;
+            letter-spacing: 0.8px;
+        }
+
+        /* СТРЕЛКИ ← и → */
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 106, 0, 0.15);
+            color: #FF6A00;
+            border: 1.5px solid #FF6A00;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+        }
+
+        .gallery-nav:hover {
+            background: rgba(255, 106, 0, 0.3);
+            transform: translateY(-50%) scale(1.12);
+            box-shadow: 0 0 18px rgba(255, 106, 0, 0.4);
+            border-color: #FF8C33;
+            color: #FF8C33;
+        }
+
+        .gallery-nav.left { left: 15px; }
+        .gallery-nav.right { right: 15px; }
+
+        .donate {
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            color: white;
+            border-radius: 20px;
+            margin: 3rem auto;
+            padding: 3.5rem 2rem;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+        }
+
+        .donate h2, .donate p { color: #fff; }
+        .donate-btn {
+            background: linear-gradient(135deg, #FF6A00, #e55a00);
+            color: white;
+            padding: 1.1rem 2.8rem;
+            border: 2px solid #FF6A00;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.4s;
+            box-shadow: 0 6px 20px rgba(255, 106, 0, 0.3);
+            font-family: 'PL Behemoth', sans-serif;
+            letter-spacing: 1.2px;
+        }
+
+        .donate-btn:hover {
+            background: linear-gradient(135deg, #FF8C33, #FF6A00);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 106, 0, 0.4);
+        }
+
+        .contact-info {
+            background: #1a1a1a;
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .contact-info p {
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-info strong,
+        .contact-info a {
+            color: #FF6A00;
+            font-weight: 400;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #FF8C33;
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #0a0a0a;
+            color: #666;
+            text-align: center;
+            padding: 2.5rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #2a2a2a;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; padding: 3rem 1.5rem; gap: 2.5rem; }
+            .hero h1 { font-size: 2.7rem; }
+            .hero-image img { max-width: 300px; }
+            nav { flex-direction: column; gap: 1.2rem; }
+            nav ul { flex-direction: column; gap: 1.2rem; }
+            .gallery-item { min-width: 280px; max-width: 280px; }
+            .gallery-nav { width: 44px; height: 44px; font-size: 1.4rem; }
+            .cta, .donate-btn { min-width: 220px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">FIREON</div>
+            <ul>
+                <li><a href="#home">Главная</a></li>
+                <li><a href="wiki.html">Вики</a></li>
+                <li><a href="#support">Поддержать</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Добро пожаловать в FIREON</h1>
+            <p>Уютный, дружный полуванильный сервер, где тебе будут рады!</p>
+            <button class="cta" id="connectBtn">
+                <span class="btn-text">Подключиться</span>
+                <span class="ip-text">fireon.20tps.ru</span>
+            </button>
+        </div>
+        <div class="hero-image">
+            <img src="Lis.png" alt="FIREON">
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Мир Fireon</h2>
+        <p>Кастомная генерация с новыми биомами</p>
+        <div class="world-gallery">
+            <button class="gallery-nav left" onclick="scrollGallery(-1)">←</button>
+            <div class="gallery-container" id="gallery">
+                <div class="gallery-item"><img src="1.jpg" alt="Осений лес"><div class="caption">Осений лес</div></div>
+                <div class="gallery-item"><img src="2.jpg" alt="Магический лес"><div class="caption">Магический лес</div></div>
+                <div class="gallery-item"><img src="3.jpg" alt="Готовка"><div class="caption">Готовка</div></div>
+                <div class="gallery-item"><img src="4.jpg" alt="Реки"><div class="caption">Реки</div></div>
+                <div class="gallery-item"><img src="5.jpg" alt="Подземелье огня"><div class="caption">Вулкан</div></div>
+            </div>
+            <button class="gallery-nav right" onclick="scrollGallery(1)">→</button>
+        </div>
+    </section>
+<section id="support" class="section donate">
+    <h2>Поддержать проект</h2>
+    <p></p>
+    <a href="https://boosty.to/fireon" target="_blank" rel="noopener" class="donate-btn">
+        Поддержать на Boosty
+    </a>
+</section>
+    <section id="contact" class="section">
+        <h2>Контакты</h2>
+        <div class="contact-info">
+            <p>Канал: <a href="https://t.me/fireon_mc" target="_blank" rel="noopener"><strong>@fireon_mc</strong></a></p>
+            <p>Бот поддержки и заявок: <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener"><strong>@Fire0n_bot</strong></a></p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 FIREON. Все права защищены огнём.</p>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver(e => e.forEach(en => en.isIntersecting && en.target.classList.add('visible')), { threshold: 0.1 });
+        document.querySelectorAll('.gallery-item').forEach(i => observer.observe(i));
+
+        function scrollGallery(d) {
+            document.getElementById('gallery').scrollBy({ left: d * 340, behavior: 'smooth' });
+        }
+
+        const btn = document.getElementById('connectBtn');
+        const ip = "fireon.20tps.ru";
+        btn.addEventListener('click', () => {
+            navigator.clipboard?.writeText(ip).then(() => {
+                btn.textContent = 'Скопировано!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = '<span class="btn-text">Подключиться</span><span class="ip-text">' + ip + '</span>';
+                    btn.classList.remove('copied');
+                }, 1500);
+            }) || prompt('Скопируй IP:', ip);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        }));
+    </script>
+</body>
+</html>

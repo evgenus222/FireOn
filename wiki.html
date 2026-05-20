@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIREON Wiki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
+    <style>
+.cooking-section {
+    max-width: 1200px;
+    margin: 3rem auto 2rem;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.cooking-title {
+    font-family: 'Helvetica Inserat LT Pro', sans-serif;
+    font-size: 3.2rem;
+    color: #FF6A00;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 
+        0 0 15px rgba(255, 106, 0, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.6);
+    margin: 0 0 1rem 0;
+    position: relative;
+    display: inline-block;
+}
+
+.cooking-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #FF6A00, transparent);
+    border-radius: 2px;
+}
+
+.cooking-image {
+    margin-top: 1.5rem;
+}
+
+.cooking-image img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    border: 2px solid #FF6A00;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(255, 106, 0, 0.2);
+    transition: all 0.4s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.cooking-image img:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 20px 45px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(255, 106, 0, 0.3);
+}
+
+.wiki-plugins {
+    max-width: 1200px;
+    margin: 4rem auto 3rem;
+    padding: 0 2rem;
+}
+
+.wiki-plugins-container {
+    margin-top: 2rem;
+    background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+    border-radius: 24px;
+    padding: 2.5rem;
+    border: 2px solid #FF6A00;
+    box-shadow:
+        0 0 40px rgba(255, 106, 0, 0.15),
+        0 20px 50px rgba(0, 0, 0, 0.7),
+        inset 0 0 20px rgba(182, 102, 214, 0.05);
+}
+
+.wiki-card {
+    margin-bottom: 2rem;
+    padding: 1.8rem;
+    background: rgba(20, 20, 20, 0.6);
+    border-radius: 16px;
+    border-left: 4px solid #B666D6;
+    backdrop-filter: blur(6px);
+    transition: all 0.4s ease;
+    text-align: left;
+}
+
+.wiki-card:last-child {
+    margin-bottom: 0;
+}
+
+.wiki-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 30px rgba(182, 102, 214, 0.35);
+}
+
+.wiki-card-title {
+    font-family: 'Helvetica Inserat LT Pro', sans-serif;
+    font-size: 1.8rem;
+    color: #B666D6;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(182, 102, 214, 0.5);
+}
+
+.wiki-card-body {
+    font-family: 'Inter', sans-serif;
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.wiki-card-body p {
+    margin-bottom: 0.8rem;
+}
+
+.wiki-card-body ul,
+.wiki-card-body ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.wiki-card-body li {
+    margin-bottom: 0.45rem;
+}
+
+.wiki-card-body a {
+    color: #FF6A00;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.wiki-card-body a:hover {
+    color: #FF8C33;
+    text-decoration: underline;
+}
+
+.wiki-card-body code,
+.wiki-card-body .cmd {
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: rgba(255, 106, 0, 0.12);
+    color: #FF8C33;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 106, 0, 0.25);
+}
+
+.wiki-note {
+    margin-top: 1rem;
+    padding: 1rem 1.2rem;
+    background: rgba(255, 106, 0, 0.08);
+    border-radius: 10px;
+    border-left: 3px solid #FF6A00;
+    font-size: 0.95rem;
+    color: #bbb;
+}
+
+.wiki-toolbar {
+    position: sticky;
+    top: 72px;
+    z-index: 900;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(145deg, rgba(17, 17, 17, 0.97), rgba(26, 26, 26, 0.97));
+    border: 2px solid #FF6A00;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transition: padding 0.35s ease, margin 0.35s ease, border-radius 0.35s ease;
+}
+
+.wiki-toolbar.collapsed {
+    padding: 0.55rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+}
+
+.wiki-toolbar-toggle {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #FF6A00;
+    background: rgba(255, 106, 0, 0.1);
+    border: 1px solid rgba(255, 106, 0, 0.4);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.wiki-toolbar-toggle:hover {
+    background: rgba(255, 106, 0, 0.2);
+    color: #FF8C33;
+}
+
+.wiki-toolbar.collapsed .wiki-toolbar-toggle {
+    display: flex;
+}
+
+.wiki-toolbar-body {
+    overflow: hidden;
+    max-height: 280px;
+    opacity: 1;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.35s ease;
+}
+
+.wiki-toolbar.collapsed .wiki-toolbar-body {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+.wiki-toolbar.force-expanded .wiki-toolbar-body {
+    max-height: 280px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.wiki-search-wrap {
+    margin-bottom: 1rem;
+}
+
+.wiki-search-input {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #e0e0e0;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid #444;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wiki-search-input:focus {
+    border-color: #FF6A00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.15);
+}
+
+.wiki-search-input::placeholder {
+    color: #777;
+}
+
+.wiki-quick-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.wiki-quick-nav a {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #ccc;
+    text-decoration: none;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: rgba(20, 20, 20, 0.6);
+    transition: all 0.25s ease;
+}
+
+.wiki-quick-nav a:hover {
+    color: #FF6A00;
+    border-color: #FF6A00;
+    background: rgba(255, 106, 0, 0.1);
+}
+
+.wiki-search-empty {
+    margin-top: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+}
+
+.wiki-searchable.wiki-hidden {
+    display: none !important;
+}
+
+.wiki-card.mark-highlight {
+    box-shadow: 0 0 25px rgba(255, 106, 0, 0.35);
+    border-left-color: #FF6A00;
+}
+
+.rule-chapter .wiki-card-title {
+    font-size: 1.45rem;
+}
+
+.rule-item {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rule-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.rule-item strong {
+    color: #FF8C33;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-right: 0.35rem;
+}
+
+.status-streamer { background: rgba(182, 102, 214, 0.35); color: #e0c0ff; }
+.status-youtube { background: rgba(220, 50, 50, 0.35); color: #ffb0b0; }
+.status-donator { background: rgba(255, 106, 0, 0.35); color: #ffd0a0; }
+
+@media (max-width: 768px) {
+    .wiki-toolbar {
+        top: 120px;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        padding: 1rem;
+    }
+    .wiki-quick-nav a {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.65rem;
+    }
+}
+        @font-face {
+            font-family: 'PL Behemoth';
+            src: url('fonts/PLBehemoth-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Helvetica Inserat LT Pro';
+            src: url('fonts/HelveticaInseratLTPro-Roman.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'PL Behemoth', sans-serif;
+            line-height: 1.7;
+            color: #e0e0e0;
+            background: #0a0a0a;
+            padding-top: 90px;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(182, 102, 214, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 106, 0, 0.03) 0%, transparent 50%);
+        }
+
+        header {
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #2a2a2a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 2.3rem;
+            font-weight: 400;
+            color: #FF6A00;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1.5px;
+            background: #FF6A00;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        nav ul li a:hover {
+            color: #FF6A00;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .character-select {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 3rem;
+            background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+            border-radius: 24px;
+            box-shadow: 
+                0 0 40px rgba(255, 106, 0, 0.15),
+                0 20px 50px rgba(0, 0, 0, 0.7),
+                inset 0 0 20px rgba(182, 102, 214, 0.05);
+            border: 2px solid #FF6A00;
+            position: relative;
+            overflow: hidden;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .character-select::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(182, 102, 214, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .origin-info {
+            flex: 1;
+            min-width: 320px;
+            z-index: 1;
+            padding: 1rem;
+        }
+
+        .origin-info h1 {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 2.8rem;
+            color: #FF6A00;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(255, 106, 0, 0.3);
+        }
+
+        .origin-info .name {
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+            font-size: 2.4rem;
+            color: #B666D6;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1.5px;
+            text-shadow: 
+                0 0 10px rgba(182, 102, 214, 0.5),
+                0 2px 6px rgba(0, 0, 0, 0.5);
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from { text-shadow: 0 0 10px rgba(182, 102, 214, 0.5), 0 2px 6px rgba(0, 0, 0, 0.5); }
+            to { text-shadow: 0 0 20px rgba(182, 102, 214, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6); }
+        }
+
+        .origin-info .desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #ccc;
+            line-height: 1.8;
+            background: rgba(20, 20, 20, 0.6);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border-left: 3px solid #B666D6;
+            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .origin-info .desc::-webkit-scrollbar {
+            width: 6px;
+        }
+        .origin-info .desc::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        .origin-info .desc::-webkit-scrollbar-thumb {
+            background: #B666D6;
+            border-radius: 10px;
+        }
+
+        .origin-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .origin-image .frame {
+            position: relative;
+            display: inline-block;
+            padding: 12px;
+            background: linear-gradient(45deg, #FF6A00, #B666D6);
+            border-radius: 20px;
+            box-shadow: 
+                0 0 30px rgba(255, 106, 0, 0.3),
+                0 0 50px rgba(182, 102, 214, 0.2);
+            animation: frame-glow 3s infinite alternate;
+        }
+
+        @keyframes frame-glow {
+            from { box-shadow: 0 0 30px rgba(255, 106, 0, 0.3), 0 0 50px rgba(182, 102, 214, 0.2); }
+            to { box-shadow: 0 0 40px rgba(255, 106, 0, 0.5), 0 0 70px rgba(182, 102, 214, 0.4); }
+        }
+
+        .origin-image img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            border-radius: 16px;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s ease;
+            display: block;
+        }
+
+        .origin-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(182, 102, 214, 0.4);
+        }
+
+        .origin-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 106, 0, 0.2);
+            color: #FF6A00;
+            border: 2px solid #FF6A00;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            font-family: 'Helvetica Inserat LT Pro', sans-serif;
+        }
+
+        .origin-nav:hover {
+            background: rgba(255, 106, 0, 0.4);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 0 30px rgba(255, 106, 0, 0.6);
+            border-color: #FF8C33;
+            color: #FF8C33;
+        }
+
+        .origin-nav.left { left: 20px; }
+        .origin-nav.right { right: 20px; }
+
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90%;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+
+        .dot.active {
+            background: #B666D6;
+            box-shadow: 0 0 20px rgba(182, 102, 214, 0.8);
+            transform: scale(1.4);
+        }
+
+        footer {
+            background: #0a0a0a;
+            color: #666;
+            text-align: center;
+            padding: 2.5rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #2a2a2a;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .character-select { flex-direction: column; padding: 2rem; gap: 2rem; }
+            .origin-info h1 { font-size: 2.2rem; }
+            .origin-info .name { font-size: 1.9rem; }
+            .origin-image .frame { padding: 8px; }
+            .origin-image img { max-width: 280px; }
+            .origin-nav { width: 50px; height: 50px; font-size: 1.6rem; }
+            .origin-nav.left { left: 10px; }
+            .origin-nav.right { right: 10px; }
+            .dots { bottom: 15px; gap: 8px; }
+            .dot { width: 8px; height: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">FIREON wiki</div>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="wiki.html">Вики</a></li>
+                <li><a href="https://t.me/fireon_mc" target="_blank" rel="noopener">Telegram</a></li>
+                <li><a href="index.html#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="wiki-toolbar" id="wiki-toolbar">
+        <button type="button" class="wiki-toolbar-toggle" id="wiki-toolbar-toggle" aria-expanded="false" aria-controls="wiki-toolbar-body">
+            <span aria-hidden="true">🔍</span> Поиск и разделы
+        </button>
+        <div class="wiki-toolbar-body" id="wiki-toolbar-body">
+            <div class="wiki-search-wrap">
+                <input type="search" class="wiki-search-input" id="wiki-search" placeholder="Поиск по вики: правила, скины, brewery, стримы…" autocomplete="off">
+            </div>
+            <nav class="wiki-quick-nav" aria-label="Разделы вики">
+                <a href="#origins">Происхождения</a>
+                <a href="#rules">Правила</a>
+                <a href="#streams">Стримы</a>
+                <a href="#cooking">Готовка</a>
+                <a href="#mech-invis">Невидимка</a>
+                <a href="#mech-skipnight">Скип ночи</a>
+                <a href="#mech-skins">Скины</a>
+                <a href="#mech-brewery">Brewery</a>
+                <a href="#mech-voice">Голосовой чат</a>
+                <a href="#mech-emotes">Эмоции</a>
+                <a href="#mech-discs">Диски</a>
+            </nav>
+            <p class="wiki-search-empty" id="wiki-search-empty" hidden>Ничего не найдено. Попробуйте другой запрос.</p>
+        </div>
+    </div>
+
+    <section id="origins" class="character-select wiki-searchable" data-search="происхождение origin человек паук птичий эндер дух">
+        <button class="origin-nav left" onclick="changeOrigin(-1)">←</button>
+
+        <div class="origin-info">
+            <h1>Происхождение</h1>
+            <div class="name" id="origin-name">Человек</div>
+            <div class="desc" id="origin-desc">
+                Обычный опыт, без преимуществ и недостатков.
+            </div>
+        </div>
+
+        <div class="origin-image">
+            <div class="frame">
+                <img id="origin-img" src="p1.png" alt="Человек">
+            </div>
+        </div>
+
+        <button class="origin-nav right" onclick="changeOrigin(1)">→</button>
+
+        <div class="dots" id="dots"></div>
+
+    </section>
+
+    <section id="rules" class="wiki-plugins wiki-searchable" data-search="правила сервера fireon суд бан мут гриф чат торговля">
+        <h2 class="cooking-title">ПРАВИЛА СЕРВЕРА</h2>
+        <div class="wiki-plugins-container">
+
+            <div class="wiki-card rule-chapter" id="rules-general">
+                <div class="wiki-card-title">1. Общие положения</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>1.1.</strong> Заходя на сервер, игрок автоматически соглашается со всеми правилами.</div>
+                    <div class="rule-item"><strong>1.2.</strong> Незнание правил не освобождает от ответственности.</div>
+                    <div class="rule-item"><strong>1.3.</strong> Администрация сервера имеет право принимать решения в спорных ситуациях, не описанных напрямую в правилах.</div>
+                    <div class="rule-item"><strong>1.4.</strong> Попытка обхода правил приравнивается к их нарушению.</div>
+                    <div class="rule-item"><strong>1.5.</strong> Решения администрации и Суда обязательны к исполнению.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-world">
+                <div class="wiki-card-title">2. Правила поведения в мире</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>2.1.</strong> Нахождение на базе игрока после просьбы покинуть территорию — предупреждение, при повторе — суд.</div>
+                    <div class="rule-item"><strong>2.2.</strong> Строительство в радиусе 500 блоков от чужой базы без разрешения владельца: предупреждение; суд, по итогам которого — перенос или снос постройки.</div>
+                    <div class="rule-item"><strong>2.3.</strong> Гриферство в любом виде: предупреждение → суд → бан.</div>
+                    <div class="rule-item"><strong>2.4.</strong> Гриферство с твинк-аккаунта — бан основного аккаунта.</div>
+                    <div class="rule-item"><strong>2.5.</strong> Воровство ресурсов или предметов — предупреждение, суд.</div>
+                    <div class="rule-item"><strong>2.6.</strong> Использование чужих ферм (кроме общественных) без разрешения владельца или таблички с разрешением — суд.</div>
+                    <div class="rule-item"><strong>2.7.</strong> Порча игрового мира запрещена. К ней относится: лавокасты; хаотичная установка блоков; ямы большой глубины без цели; столбы; массово срубленные деревья без последующей очистки; постройки, оскорбляющие игроков, администрацию или нарушающие нормы морали. Наказание: предупреждение, снос постройки, суд / бан (до 30 дней).</div>
+                    <div class="rule-item"><strong>2.8.</strong> Захват больших территорий без их облагораживания (менее 70% освоения) — предупреждение, сокращение границ базы, суд.</div>
+                    <div class="rule-item"><strong>2.9.</strong> Убийство игрока без взаимного согласия или игровой причины — суд.</div>
+                    <div class="rule-item"><strong>2.10.</strong> Присвоение лута погибшего игрока: найденный лут должен быть возвращён владельцу; при невозможности — сложен в сундук на месте смерти. Нарушение: суд / бан (до 15 дней).</div>
+                    <div class="rule-item"><strong>2.11.</strong> Подстрекательство игроков к нарушению правил — суд.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-software">
+                <div class="wiki-card-title">3. Запрещённое ПО и аккаунты</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>3.1.</strong> Запрещено использование читов и стороннего ПО, дающего преимущество: Xray (в любых формах), читы, автокликеры, макросы, любые аналоги. Наказание: бан до 25 дней.</div>
+                    <div class="rule-item"><strong>3.2.</strong> Разрешённые моды: OptiFine; Sodium / Lithium / Phosphor; MiniMap без отображения игроков и руд. (Окончательный список утверждается администрацией.)</div>
+                    <div class="rule-item"><strong>3.3.</strong> JEI и аналоги запрещены, если дают подсказки крафта в режиме выживания.</div>
+                    <div class="rule-item"><strong>3.4.</strong> Взлом аккаунта — перманентный бан.</div>
+                    <div class="rule-item"><strong>3.5.</strong> Передача аккаунта третьим лицам — бан переданного аккаунта.</div>
+                    <div class="rule-item"><strong>3.6.</strong> Использование твинков: предупреждение; бан твинка; при повторе — бан основного аккаунта.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-behavior">
+                <div class="wiki-card-title">4. Поведение и взаимодействие</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>4.1.</strong> Издевательства, травля и систематическое давление на игроков — предупреждение, суд.</div>
+                    <div class="rule-item"><strong>4.2.</strong> Аморальное поведение — предупреждение, суд / бан (от 1 дня).</div>
+                    <div class="rule-item"><strong>4.3.</strong> Создание помех работе сервера (лаг-машины, чрезмерно большие фермы): предупреждение; суд / бан; обязательный демонтаж конструкции.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-trade">
+                <div class="wiki-card-title">5. Торговля</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>5.1.</strong> Официальная валюта сервера — Алмазная руда (АР).</div>
+                    <div class="rule-item"><strong>5.2.</strong> Курс: 1 АР = 5 обычных алмазов.</div>
+                    <div class="rule-item"><strong>5.3.</strong> Любые мошеннические действия при торговле запрещены — суд.</div>
+                    <div class="rule-item"><strong>5.4.</strong> Обман из-за неточного описания товара также считается мошенничеством. (Торговля за обычные алмазы не запрещена.)</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-chat">
+                <div class="wiki-card-title">6. Правила чата</div>
+                <div class="wiki-card-body">
+                    <p style="margin-bottom: 1rem;">Запрещено:</p>
+                    <div class="rule-item"><strong>6.1.</strong> Спам — предупреждение, мут (10–30 минут).</div>
+                    <div class="rule-item"><strong>6.2.</strong> Введение игроков в заблуждение — предупреждение, суд.</div>
+                    <div class="rule-item"><strong>6.3.</strong> Попрошайничество — предупреждение, мут (10–40 минут).</div>
+                    <div class="rule-item"><strong>6.4.</strong> Нецензурная лексика — предупреждение, мут / суд, вплоть до бана.</div>
+                    <div class="rule-item"><strong>6.5.</strong> Пропаганда нацизма, фашизма, терроризма, антисемитизма — мут (30–60 минут), вплоть до бана.</div>
+                    <div class="rule-item"><strong>6.6.</strong> Реклама других серверов (простое упоминание разрешено) — бан до 14 дней.</div>
+                    <div class="rule-item"><strong>6.7.</strong> Угрозы в личных сообщениях — предупреждение, бан (1–3 дня).</div>
+                    <div class="rule-item"><strong>6.8.</strong> Публикация личных данных без согласия — бан.</div>
+                    <div class="rule-item"><strong>6.9.</strong> Упоминание родственников в оскорбительном контексте — мут (30–60 минут), вплоть до бана.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-court">
+                <div class="wiki-card-title">7. Суд и выборы</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>7.1.</strong> Суд состоит из одного Судьи, избираемого голосованием в <a href="https://t.me/fireon_mc" target="_blank" rel="noopener">Telegram-канале</a> сервера.</div>
+                    <div class="rule-item"><strong>7.2.</strong> Срок полномочий Судьи — 1–2 месяца.</div>
+                    <div class="rule-item"><strong>7.3.</strong> Выборы могут быть отменены или перенесены решением администрации.</div>
+                    <div class="rule-item"><strong>7.4.</strong> Выборы проводятся при наличии 3 кандидатов или выше.</div>
+                    <div class="rule-item"><strong>7.5.</strong> Дата выборов объявляется администрацией в Telegram-канале.</div>
+                    <div class="rule-item"><strong>7.6.</strong> Выдвижение кандидатов открыто за 2 недели до голосования.</div>
+                    <div class="rule-item"><strong>7.7.</strong> Кандидаты могут публиковать свои информационные речи через <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener">@Fire0n_bot</a>.</div>
+                    <div class="rule-item"><strong>7.8.</strong> Судья обязан: быть беспристрастным; не использовать служебное положение; соблюдать правила сервера; рассматривать конфликты и жалобы, опираясь на логи сервера.</div>
+                    <div class="rule-item"><strong>7.9.</strong> При неисполнении обязанностей Судья может быть снят администрацией без голосования.</div>
+                </div>
+            </div>
+
+            <div class="wiki-card rule-chapter" id="rules-final">
+                <div class="wiki-card-title">8. Заключительные положения</div>
+                <div class="wiki-card-body">
+                    <div class="rule-item"><strong>8.1.</strong> Администрация оставляет за собой право вносить изменения в правила.</div>
+                    <div class="rule-item"><strong>8.2.</strong> Попытки давления на администрацию или Суд — отягчающее обстоятельство.</div>
+                    <p style="margin-top: 1.2rem; color: #FF8C33; font-weight: 600;">Играйте честно и уважайте других игроков!</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="streams" class="wiki-plugins wiki-searchable" data-search="стрим ютубер стример live оповещения трансляция донатер ник цвет">
+        <h2 class="cooking-title">СТРИМЫ И СТАТУСЫ</h2>
+        <div class="wiki-plugins-container">
+            <div class="wiki-card">
+                <div class="wiki-card-title">Оповещения о стримах</div>
+                <div class="wiki-card-body">
+                    <p>На сервер добавлены <strong>оповещения о стримах</strong>. Чтобы получить эту возможность, отправьте в бота-предложку краткую анкету.</p>
+                    <p><strong>Пример заявки:</strong></p>
+                    <div class="wiki-note" style="margin-bottom: 1rem;">
+                        Заявка на стримера/ютубера<br>
+                        Ваш ник и ссылка на платформу, с которой вы ведёте трансляции (Твич / YouTube)
+                    </div>
+                    <p><strong>Особые статусы (цветные ники):</strong></p>
+                    <ul>
+                        <li><span class="status-badge status-streamer">Стример</span> — фиолетовый ник</li>
+                        <li><span class="status-badge status-youtube">Ютубер</span> — красный ник</li>
+                        <li><span class="status-badge status-donator">Донатер</span> — оранжевый ник</li>
+                    </ul>
+                    <p>Донатеры учитываются с момента объявления: те, кто донатил до поста, цветной ник не получают.</p>
+                    <p>Чтобы посмотреть активные трансляции на сервере, используйте команду <span class="cmd">/Live</span>.</p>
+                    <p>Заявки отправляйте в бота: <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener"><strong>@Fire0n_bot</strong></a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="cooking" class="cooking-section wiki-searchable" data-search="готовка cooking еда рецепт">
+    <h2 class="cooking-title">ГОТОВКА</h2>
+    <div class="cooking-image">
+        <img src="cooking.png" alt="Готовка в FIREON">
+    </div>
+</section>
+
+<section id="mechanics" class="wiki-plugins">
+    <h2 class="cooking-title">МЕХАНИКИ СЕРВЕРА</h2>
+    <div class="wiki-plugins-container">
+
+        <div class="wiki-card wiki-searchable" id="mech-invis" data-search="невидимка убийство килл смерть ник">
+            <div class="wiki-card-title">Невидимка и убийства</div>
+            <div class="wiki-card-body">
+                <p>На сервере действует правило: если игрок находится в состоянии <strong>невидимости</strong> (способности происхождения, зелья, эффекты плагинов), его <strong>ник не указывается</strong> в сообщениях об убийствах и в ленте смертей.</p>
+                <p>Это сделано, чтобы невидимые игроки не раскрывались автоматически через килл-фид и статистику PvP.</p>
+                <div class="wiki-note">
+                    Сообщение о смерти может выглядеть обезличенно — без имени убийцы. Это ожидаемое поведение, а не баг.
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-skipnight" data-search="скип ночь сон кровать skip night">
+            <div class="wiki-card-title">Скип ночи</div>
+            <div class="wiki-card-body">
+                <p>Ночь на сервере можно пропустить с помощью плагина <strong>Skip Night</strong>.</p>
+                <p><strong>Как пропустить ночь:</strong></p>
+                <ol>
+                    <li>Дождитесь наступления ночи (или дождя/грозы, если плагин это учитывает).</li>
+                    <li>Лягте спать в кровати — достаточно части игроков онлайн (порог задаётся на сервере).</li>
+                    <li>Когда нужное количество игроков заснёт, ночь автоматически сменится днём.</li>
+                </ol>
+                <p>Если вы один на сервере — достаточно одной кровати. В группе может потребоваться заснуть нескольким игрокам.</p>
+                <div class="wiki-note">
+                    Монстры перестанут появляться после скипа, пока снова не наступит ночь. Кровати должны быть доступны (без опасных мобов рядом).
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-skins" data-search="скин skin skinsrestorer плащ png бот">
+            <div class="wiki-card-title">Скины (SkinsRestorer)</div>
+            <div class="wiki-card-body">
+                <p>Чтобы установить свой скин, используйте генератор SkinsRestorer и бота <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener">@Fire0n_bot</a>.</p>
+                <p><strong>Пошаговая инструкция:</strong></p>
+                <ol>
+                    <li>Откройте генератор: <a href="https://skinsrestorer.net/generator" target="_blank" rel="noopener">skinsrestorer.net/generator</a></li>
+                    <li>Загрузите файл скина в формате <strong>PNG</strong> (до 5 МБ).</li>
+                    <li>По желанию выберите плащ в выпадающем списке.</li>
+                    <li>Укажите желаемое название скина (латиница, без пробелов — например <code>cool_skin_name</code>).</li>
+                    <li>Выберите тип кожи: <strong>Классический</strong> или <strong>Тонкий (Slim)</strong>.</li>
+                    <li>Нажмите <strong>«Сгенерировать команду /sr createcustom»</strong>.</li>
+                    <li>Нажмите <strong>«Принято (скопировать)»</strong> и скопируйте готовую команду.</li>
+                    <li>Отправьте скопированный текст в <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener"><strong>@Fire0n_bot</strong></a>.</li>
+                </ol>
+                <div class="cooking-image" style="margin: 1.5rem 0;">
+                    <img src="skins-guide.png" alt="Инструкция: как загрузить скин на сервер FIREON">
+                </div>
+                <p><strong>Если скин не отображается:</strong></p>
+                <ul>
+                    <li>На сервере выполните: <span class="cmd">/skinsrestorer:skin set ВАШ_НИК</span></li>
+                    <li>Ник в команде должен <strong>точно совпадать</strong> с ником, который вы указывали на сайте при создании скина.</li>
+                </ul>
+                <div class="wiki-note">
+                    Если проблема остаётся — напишите в поддержку сервера, приложив скриншот и ник.
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-brewery" data-search="brewery алкоголь пиво вино бочка котёл дистилляция ферментация">
+            <div class="wiki-card-title">Brewery — алкоголь и напитки</div>
+            <div class="wiki-card-body">
+                <p>Плагин <strong>Brewery</strong> добавляет варку напитков по рецептам. Варка состоит из трёх этапов: <strong>ферментация</strong>, <strong>дистилляция</strong> и <strong>выдержка (настаивание)</strong>. Не для каждого напитка нужны все три — в рецепте указано, что именно требуется.</p>
+
+                <p><strong>1. Ферментация</strong></p>
+                <ul>
+                    <li>Нужен <strong>котёл с водой</strong> и под ним <strong>источник тепла</strong>: открытое пламя (чтобы не гасло от дождя, можно зажечь на незерите), блок магмы, блок лавы или костёр.</li>
+                    <li>Котлы можно ставить вплотную друг к другу — главное, чтобы под <em>каждым</em> был свой нагрев.</li>
+                    <li>Возьмите в руку ингредиенты из рецепта и нажимайте по котлу <strong>ПКМ</strong>, чтобы засыпать их по очереди.</li>
+                    <li>В рецепте указано <strong>время ферментации</strong>. Отслеживать его удобно <strong>часами</strong>: ПКМ по котлу с часами в руке — в чате появится, сколько минут прошло с момента загрузки <em>последнего</em> ингредиента. С третьей минуты показывается точное время; в первые две минуты будет сообщение вроде «котёл только начал кипеть».</li>
+                    <li>Когда пройдёт нужное время, возьмите <strong>пустые стеклянные бутылки</strong> и нажмите ПКМ по котлу — жидкость перельётся в бутылки. Из полного котла за раз можно забрать <strong>до трёх</strong> бутылок напитка.</li>
+                </ul>
+
+                <p><strong>2. Дистилляция</strong></p>
+                <ul>
+                    <li>Некоторые напитки после ферментации нужно прогнать через обычную <strong>зельеварку</strong>.</li>
+                    <li>В слот ингредиента положите одну <strong>светокаменную пыль</strong> — её не нужно менять после каждого цикла, она работает постоянно.</li>
+                    <li>Загрузите в зельеварку бутылки с напитком и дождитесь нужного числа <strong>циклов дистилляции</strong> из рецепта. Процесс остановится сам, когда лимит достигнут — постоянно следить за таймером не обязательно.</li>
+                    <li>Если засунуть в зельеварку со светокаменной пылью напиток, который <strong>не предназначен</strong> для дистилляции, с каждым циклом он будет терять качество и в итоге превратится в <strong>мутный дистиллят</strong>.</li>
+                </ul>
+
+                <p><strong>3. Выдержка (настаивание в бочке)</strong></p>
+                <ul>
+                    <li>На FIREON <strong>1 игровой «год» выдержки</strong> соответствует примерно <strong>20 минутам</strong> реального времени (как на типичных настройках Brewery).</li>
+                    <li>Важны <strong>тип древесины</strong> бочки и её размер — в рецепте указано, в какой бочке настаивать напиток.</li>
+                    <li><strong>Малая бочка плагина:</strong> 8 деревянных ступеней и табличка с текстом <span class="cmd">Barrel</span>. При успешной сборке в чате появится сообщение о создании бочки (на английском — если на сервере без русификатора). Внутри <strong>9 слотов</strong> под напитки; в остальные ячейки теоретически можно класть и другие предметы, если вам это зачем-то нужно.</li>
+                    <li><strong>Большая бочка плагина:</strong> та же логика постройки, но больше слотов — обычно <strong>27</strong> под напитки и больше расход ресурсов.</li>
+                    <li><strong>Обычная ванильная бочка Minecraft</strong> тоже подходит: для плагина она считается <strong>дубовой</strong>, независимо от вида дерева в крафте, и даёт <strong>6 слотов</strong> под напитки. Остальные слоты свободны для прочих вещей — поэтому <strong>уже готовые напитки лучше хранить в сундуках</strong>, иначе в смешанном хранении они могут испортиться.</li>
+                    <li>Бочки Brewery можно ставить рядом друг с другом, но <strong>не прижимайте их вплотную к деревянным доскам и «стенам» из досок</strong>: бочка может потерять свойства, перестать открываться и выбросить содержимое в мир в неподходящий момент.</li>
+                </ul>
+
+                <p><strong>После варки:</strong> напиток пьётся с бутылки в руке (ПКМ). Сила опьянения и эффекты зависят от рецепта и качества. Справка по командам плагина (если включена): <span class="cmd">/brew help</span>.</p>
+
+                <div class="wiki-note">
+                    Точные рецепты и названия напитков зависят от конфигурации сервера — уточняйте у администрации или в общем гайде по Brewery для вашей версии.
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-voice" data-search="голосовой чат voice simple v микрофон">
+            <div class="wiki-card-title">Голосовой чат (Simple Voice Chat)</div>
+            <div class="wiki-card-body">
+                <p>На сервере установлен мод/плагин <strong>Simple Voice Chat</strong> — голосовое общение по близости.</p>
+                <p><strong>Что нужно сделать:</strong></p>
+                <ol>
+                    <li>Установите мод <strong>Simple Voice Chat</strong> для вашей версии Minecraft (Fabric или Forge — как на сервере).</li>
+                    <li>Запустите игру с модом и зайдите на сервер FIREON.</li>
+                    <li>При первом входе пройдите настройку микрофона в меню мода.</li>
+                    <li>Говорите в игре: по умолчанию используется клавиша <span class="cmd">V</span> (зажать — говорить, отпустить — молчать). Клавишу можно сменить в настройках клавиш.</li>
+                </ol>
+                <p><strong>Как это работает:</strong></p>
+                <ul>
+                    <li>Слышны только игроки рядом — чем дальше, тем тише голос.</li>
+                    <li>Через стены звук приглушается.</li>
+                    <li>В настройках мода можно проверить уровень микрофона и выбрать устройство ввода.</li>
+                </ul>
+                <div class="wiki-note">
+                    Без мода на клиенте голосовой чат работать не будет. Убедитесь, что версия мода совпадает с версией сервера.
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-emotes" data-search="эмоции emote emotecraft анимация">
+            <div class="wiki-card-title">Эмоции (EmoteCraft)</div>
+            <div class="wiki-card-body">
+                <p>Плагин <strong>EmoteCraft</strong> позволяет показывать эмоции и анимации персонажа.</p>
+                <p><strong>Как пользоваться:</strong></p>
+                <ol>
+                    <li>Установите мод <strong>EmoteCraft</strong> на клиент (версия как у сервера).</li>
+                    <li>В игре откройте меню эмоций — обычно клавиша <span class="cmd">B</span> или кнопка в колесе эмоций (смотрите «Управление» в настройках).</li>
+                    <li>Выберите эмоцию из списка — персонаж проиграет анимацию.</li>
+                    <li>Другие игроки с установленным модом увидят вашу эмоцию.</li>
+                </ol>
+                <p>Некоторые эмоции можно остановить повторным нажатием или движением. В настройках EmoteCraft можно назначить свои клавиши для любимых эмоций.</p>
+                <div class="wiki-note">
+                    Игроки без мода не увидят анимации — только установленный EmoteCraft отображает эмоции корректно.
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card wiki-searchable" id="mech-discs" data-search="музыка диск пластинка mp3 cd create jukebox">
+            <div class="wiki-card-title">Музыкальные диски</div>
+            <div class="wiki-card-body">
+                <p>На сервере можно добавлять <strong>свою музыку</strong> на пластинки через бота и команду в игре.</p>
+                <p><strong>Как добавить трек:</strong></p>
+                <ol>
+                    <li>Подготовьте файл в формате <strong>MP3</strong>.</li>
+                    <li>Отправьте MP3-файл в <a href="https://t.me/Fire0n_bot" target="_blank" rel="noopener"><strong>@Fire0n_bot</strong></a>.</li>
+                    <li>Дождитесь, пока бот обработает файл — трек появится в списке доступной музыки.</li>
+                    <li>Зайдите на сервер и выполните: <span class="cmd">/cd create</span></li>
+                    <li>Выберите свою музыку из списка и создайте музыкальную пластинку.</li>
+                    <li>Вставьте пластинку в проигрыватель (jukebox) — трек начнёт играть в радиусе слышимости.</li>
+                </ol>
+                <p>Дополнительные команды плагина могут включать просмотр своих дисков и удаление — уточняйте <span class="cmd">/cd help</span> на сервере.</p>
+                <div class="wiki-note">
+                    Используйте только музыку, на которую у вас есть права. Слишком длинные или тяжёлые файлы бот может отклонить.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+    <footer>
+        <p>© 2025 FIREON. Все права защищены огнём.</p>
+    </footer>
+
+    <script>
+        const origins = [
+            { name: "Человек", desc: "• Вы обычный человек\n• У вас нет особых способностей\n• Вы лишины каких либо доп. минусов\n• Ванильный опыт игры", img: "p1.png" },
+            { name: "Паукообразный", desc: "• Может взбираться на любые твёрдые поверхности\n• Может карабкаться по паутине, создавать паутину из двух нитей\n• Временно обездвиживать существ в паутине\n• Видит светящийся эффект вокруг существ в паутине\n\n• Может есть только мясо\n• 7 сердечек\n• Получает больше урона и замедляется под «Проклятием членистоногих»", img: "p2.png" },
+            { name: "Птичий", desc: "• Медленное падение (если не крадущийся)\n• Может спать только выше Y 86\n• Двигается быстрее\n• Откладывает яйцо, когда спит всю ночь\n\n• Нельзя есть мясо (отравление)", img: "p3.png" },
+            { name: "Рождённый в Пламени", desc: "• Невосприимчив к урону от огня\n• Спавн в Нижнем мире\n• +урон, если горит\n• Не отравляется\n• Урон в воде\n• Частицы пламени\n\n• Урон от снежков и зелий", img: "p4.png" },
+            { name: "Надземный", desc: "• Планирование (двойной прыжок)\n• Взлёт на Shift\n• Двойной урон при скольжении\n• Двойной кинетический урон\n\n• Нет доспехов лучше кольчуги\n• Медлителен под блоком", img: "p5.png" },
+            { name: "Эндерианец", desc: "• Жемчуг Края каждые 30 сек\n• Мелкие частицы\n\n• Урон в воде\n• Отравление от тыкв\n• Урон от зелий", img: "p6.png" },
+            { name: "Кошачий", desc: "• Нет урона от падения\n• Выше прыжок при беге\n• Тихие шаги\n• 9 сердечек\n• Ночное зрение вне воды\n• Отпугивает криперов\n\n• Нельзя ломать камень при >2 блоках рядом", img: "p7.png" },
+            { name: "Мерлинг", desc: "• Дышит под водой, не на суше\n• Чёткое зрение под водой\n• Быстрее ломает блоки под водой\n• Быстрее плавает\n\n• +урон от пронзания\n• Воздух из зелий", img: "p8.png" },
+            { name: "Шалкер", desc: "• 9 ячеек инвентаря (не теряются)\n• Защита без доспехов\n• Ломает камень без кирки\n\n• Нет щита\n• Быстрее голод", img: "p9.png" },
+            { name: "Телекинетический", desc: "• Дальний радиус взаимодействия\n• Предметы в инвентарь автоматически\n\n• 0.75× урон\n• 3 сердца в воде", img: "p10.png" },
+            { name: "Целитель", desc: "• Пережить смерть раз в 10 мин\n• Реген 2 при ПКМ\n• Бесконечная регенерация на месте\n\n• 0.75× урон\n• 3 сердца в воде", img: "p11.png" },
+            { name: "Гипнотизер", desc: "• ПКМ по монстру → атакует последнего врага\n• ПКМ по игроку → тошнота 30 сек\n\n• 0.75× урон\n• 3 сердца в воде", img: "p12.png" },
+            { name: "Некромант", desc: "• Нежить атакует врагов\n• Возрождение мёртвых игроков\n• +здоровье и урон в Нижнем мире\n• Нежить не атакует\n\n• Жители не торгуют\n• 3 сердца в воде", img: "p13.png" },
+            { name: "Дух", desc: "• Не фиксируется Sculk\n• Невидим при неподвижности\n• +здоровье и урон в Нижнем мире\n\n• 3 сердца в воде", img: "p14.png" },
+            { name: "Повелитель Теней", desc: "• Невидим в темноте\n• +урон в темноте, −урон на свету\n\n• Воспламеняется от света\n• ×2 урон от огня\n• Нет огнестойкости\n• 3 сердца в воде", img: "p15.png" }
+        ];
+
+        let current = 0;
+
+        function changeOrigin(direction) {
+            current = (current + direction + origins.length) % origins.length;
+            updateOrigin();
+        }
+
+        function updateOrigin() {
+            const nameEl = document.getElementById('origin-name');
+            const descEl = document.getElementById('origin-desc');
+            const imgEl = document.getElementById('origin-img');
+
+            nameEl.style.opacity = 0;
+            descEl.style.opacity = 0;
+            imgEl.style.opacity = 0;
+
+            setTimeout(() => {
+                nameEl.textContent = origins[current].name;
+                descEl.innerHTML = origins[current].desc.replace(/\n/g, '<br>');
+                imgEl.src = origins[current].img;
+
+                nameEl.style.opacity = 1;
+                descEl.style.opacity = 1;
+                imgEl.style.opacity = 1;
+            }, 200);
+
+            updateDots();
+        }
+
+        function updateDots() {
+            const dotsContainer = document.getElementById('dots');
+            dotsContainer.innerHTML = '';
+            origins.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === current) dot.classList.add('active');
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            updateOrigin();
+        });
+
+        (function () {
+            const toolbar = document.getElementById('wiki-toolbar');
+            const toolbarToggle = document.getElementById('wiki-toolbar-toggle');
+            const searchInput = document.getElementById('wiki-search');
+            const emptyMsg = document.getElementById('wiki-search-empty');
+            const items = document.querySelectorAll('.wiki-searchable');
+            const collapseAfter = 100;
+            let scrollTicking = false;
+            let userExpanded = false;
+
+            function setToolbarExpanded(expanded) {
+                const isExpanded = expanded || userExpanded || document.activeElement === searchInput || searchInput.value.trim() !== '';
+                toolbar.classList.toggle('collapsed', !isExpanded);
+                toolbar.classList.toggle('force-expanded', userExpanded || document.activeElement === searchInput);
+                toolbarToggle.setAttribute('aria-expanded', String(isExpanded));
+            }
+
+            function onScroll() {
+                if (!scrollTicking) {
+                    scrollTicking = true;
+                    requestAnimationFrame(() => {
+                        if (window.scrollY <= collapseAfter) {
+                            userExpanded = false;
+                        }
+                        if (window.scrollY <= collapseAfter || userExpanded || searchInput.value.trim() || document.activeElement === searchInput) {
+                            setToolbarExpanded(true);
+                        } else {
+                            setToolbarExpanded(false);
+                        }
+                        scrollTicking = false;
+                    });
+                }
+            }
+
+            toolbarToggle.addEventListener('click', () => {
+                userExpanded = true;
+                setToolbarExpanded(true);
+                searchInput.focus();
+            });
+
+            searchInput.addEventListener('focus', () => setToolbarExpanded(true));
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (window.scrollY > collapseAfter && !searchInput.value.trim()) {
+                        userExpanded = false;
+                        setToolbarExpanded(false);
+                    }
+                }, 120);
+            });
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            function getSearchText(el) {
+                const extra = el.getAttribute('data-search') || '';
+                return (el.textContent + ' ' + extra).toLowerCase().replace(/\s+/g, ' ');
+            }
+
+            function filterWiki() {
+                const q = searchInput.value.trim().toLowerCase();
+                let visible = 0;
+
+                items.forEach(el => {
+                    el.classList.remove('mark-highlight');
+                    if (!q) {
+                        el.classList.remove('wiki-hidden');
+                        visible++;
+                        return;
+                    }
+                    const match = getSearchText(el).includes(q);
+                    el.classList.toggle('wiki-hidden', !match);
+                    if (match) {
+                        visible++;
+                        if (el.classList.contains('wiki-card')) {
+                            el.classList.add('mark-highlight');
+                        }
+                    }
+                });
+
+                emptyMsg.hidden = !q || visible > 0;
+            }
+
+            searchInput.addEventListener('input', () => {
+                setToolbarExpanded(true);
+                filterWiki();
+            });
+
+            document.querySelectorAll('.wiki-quick-nav a').forEach(link => {
+                link.addEventListener('click', e => {
+                    const id = link.getAttribute('href');
+                    if (!id || !id.startsWith('#')) return;
+                    const target = document.querySelector(id);
+                    if (!target) return;
+                    e.preventDefault();
+                    searchInput.value = '';
+                    filterWiki();
+                    target.classList.remove('wiki-hidden');
+                    const section = target.closest('.wiki-searchable') || target;
+                    if (section.classList.contains('wiki-hidden')) {
+                        section.classList.remove('wiki-hidden');
+                    }
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
