@@ -8,7 +8,7 @@ function headers(env, extra = {}) {
     "Access-Control-Allow-Origin": env.ADMIN_ORIGIN,
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Vary": "Origin",
     ...extra
   };
@@ -43,7 +43,9 @@ function base64Utf8(value) {
 }
 
 async function getSession(request, env) {
-  const id = cookieValue(request, COOKIE);
+  const auth = request.headers.get("Authorization") || "";
+  const bearer = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  const id = bearer || cookieValue(request, COOKIE);
   if (!id) return null;
   const raw = await env.SESSIONS.get("session:" + id);
   if (!raw) return null;
@@ -73,7 +75,7 @@ function redirect(url, cookie) {
   return new Response(null, { status: 302, headers: h });
 }
 
-async function saveToGitHub(session, env, path, content, message) {
+async function saveToGitHub(session, env, path, content, message, rawBase64 = false) {
   const base = "https://api.github.com/repos/" + env.GITHUB_REPO + "/contents/" + path;
   const current = await github(session.accessToken, base + "?ref=main");
   let sha;
@@ -86,7 +88,7 @@ async function saveToGitHub(session, env, path, content, message) {
 
   const payload = {
     message: message || "Обновление сайта FIREON через админ-панель",
-    content: base64Utf8(content),
+    content: rawBase64 ? content : base64Utf8(content),
     branch: "main"
   };
   if (sha) payload.sha = sha;
@@ -157,8 +159,7 @@ export default {
         accessToken: tokenData.access_token,
         login: user.login
       }), { expirationTtl: SESSION_TTL });
-      const cookie = COOKIE + "=" + encodeURIComponent(id) + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=" + SESSION_TTL;
-      return redirect(env.SITE_URL + "/admin.html", cookie);
+      return redirect(env.SITE_URL + "/admin.html#fireon_session=" + id);
     }
 
     if (origin !== env.ADMIN_ORIGIN) return json({ error: "Недопустимый источник запроса." }, 403, env);
@@ -172,9 +173,7 @@ export default {
     if (url.pathname === "/api/logout" && request.method === "POST") {
       const session = await getSession(request, env);
       if (session) await env.SESSIONS.delete("session:" + session.id);
-      const response = json({ ok: true }, 200, env);
-      response.headers.append("Set-Cookie", COOKIE + "=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0");
-      return response;
+      return json({ ok: true }, 200, env);
     }
 
     if (url.pathname === "/api/save" && request.method === "POST") {
@@ -208,7 +207,7 @@ export default {
       if (!base64 || base64.length > 7 * 1024 * 1024) return json({ error: "Изображение должно быть меньше 5 МБ." }, 413, env);
       const safeName = original.replace(/\.[^.]+$/, "").replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "image";
       const path = "media/uploads/" + Date.now() + "-" + safeName + "." + extension;
-      const result = await saveToGitHub(session, env, path, base64, "Загрузка изображения " + path);
+      const result = await saveToGitHub(session, env, path, base64, "Загрузка изображения " + path, true);
       if (!result.ok) return json({ error: result.message }, result.status >= 400 ? result.status : 502, env);
       return json({ ok: true, path, commit: result.commit }, 200, env);
     }
