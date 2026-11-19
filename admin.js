@@ -6,11 +6,6 @@
   let currentPage = "index.html", dirty = false, editorEnabled = true, selectedElement = null;
   let pickerMode = "page", posts = [], activePost = -1, origins = [], activeOrigin = -1;
   const SESSION_KEY = "fireon_admin_session";
-  const hashParams = new URLSearchParams(location.hash.slice(1));
-  if (hashParams.has("fireon_session")) {
-    sessionStorage.setItem(SESSION_KEY, hashParams.get("fireon_session"));
-    history.replaceState(null, "", location.pathname + location.search);
-  }
 
   function status(message, isDirty) {
     $("save-status").textContent = message;
@@ -20,7 +15,7 @@
   function markDirty() { dirty = true; status("Есть неопубликованные изменения", true); }
   function api(path, options) {
     return fetch(API + path, {
-      credentials: "include", ...options,
+      credentials: "omit", ...options,
       headers: { "Content-Type": "application/json", ...(sessionStorage.getItem(SESSION_KEY) ? { "Authorization": "Bearer " + sessionStorage.getItem(SESSION_KEY) } : {}), ...(options && options.headers || {}) }
     }).then(async response => {
       const data = await response.json().catch(() => ({}));
@@ -30,12 +25,12 @@
   }
   function showLogin(message) {
     loginScreen.hidden = false; app.hidden = true;
-    loginMessage.textContent = message || "Для входа используется твой аккаунт GitHub.";
-    loginButton.disabled = !API || API.includes("YOUR-WORKER");
-    if (loginButton.disabled) loginMessage.textContent = "Сначала нужно подключить Cloudflare Worker. Инструкция будет в файле ADMIN-SETUP.md.";
+    loginMessage.textContent = message || "Введи пароль администратора, чтобы открыть редактор.";
+    loginButton.disabled = !API || API.includes("YOUR-VERCEL-PROJECT");
+    if (loginButton.disabled) loginMessage.textContent = "Сначала подключи серверную часть по инструкции ADMIN-SETUP.md.";
   }
   async function boot() {
-    if (!API || API.includes("YOUR-WORKER")) return showLogin();
+    if (!API || API.includes("YOUR-VERCEL-PROJECT")) return showLogin();
     try {
       const me = await api("/api/me");
       if (!me.authenticated) return showLogin();
@@ -43,16 +38,29 @@
       loginScreen.hidden = true; app.hidden = false;
       loadPage("index.html", true);
     } catch {
-      showLogin(new URLSearchParams(location.search).get("auth") === "denied"
-        ? "Этот GitHub-аккаунт не добавлен в список администраторов."
-        : "Войдите через GitHub, чтобы открыть редактор.");
+      sessionStorage.removeItem(SESSION_KEY);
+      showLogin("Введи пароль администратора, чтобы открыть редактор.");
     }
   }
-  loginButton.addEventListener("click", () => {
-    if (API && !API.includes("YOUR-WORKER")) location.href = API + "/auth/login";
+  $("login-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const password = $("login-password").value;
+    if (!password || !API || API.includes("YOUR-VERCEL-PROJECT")) return;
+    loginButton.disabled = true;
+    loginMessage.textContent = "Проверяем пароль…";
+    try {
+      const result = await api("/api/login", { method: "POST", body: JSON.stringify({ password }) });
+      sessionStorage.setItem(SESSION_KEY, result.token);
+      $("login-password").value = "";
+      await boot();
+    } catch (error) {
+      loginMessage.textContent = error.message;
+      $("login-password").select();
+    } finally {
+      loginButton.disabled = false;
+    }
   });
-  $("logout-button").addEventListener("click", async () => {
-    try { await api("/api/logout", { method: "POST", body: "{}" }); } catch {}
+  $("logout-button").addEventListener("click", () => {
     sessionStorage.removeItem(SESSION_KEY);
     showLogin("Вы вышли из админ-панели.");
   });
@@ -216,7 +224,7 @@
 
   async function uploadImage(file) {
     if (!file) return null;
-    if (file.size > 5 * 1024 * 1024) throw new Error("Изображение должно быть меньше 5 МБ.");
+    if (file.size > 3 * 1024 * 1024) throw new Error("Изображение должно быть меньше 3 МБ.");
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result).split(",")[1]);
