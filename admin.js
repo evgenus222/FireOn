@@ -91,7 +91,7 @@
       "body.fireon-editor-active .fireon-selected{outline:2px solid #b666d6!important;outline-offset:4px}";
     doc.head.appendChild(style);
     doc.body.classList.add("fireon-editor-active");
-    const selectors = "h1,h2,h3,h4,p,li,.logo,.caption,.wiki-card-title,.name,.desc,.contact-info strong,.cta .btn-text,.cta .ip-text,.donate-btn,footer p";
+    const selectors = "h1,h2,h3,h4,p,li,.logo,.caption,.wiki-card-title,.contact-info strong,.contact-info a,nav a,.cta .btn-text,.cta .ip-text,.donate-btn,footer p";
     doc.querySelectorAll(selectors).forEach(el => {
       if (el.closest("script,style,button")) return;
       el.contentEditable = editorEnabled ? "true" : "false";
@@ -104,8 +104,12 @@
     doc.addEventListener("click", event => {
       const image = event.target.closest && event.target.closest("img[data-fireon-image]");
       if (image && editorEnabled) {
-        event.preventDefault(); event.stopPropagation(); selectElement(image);
-        pickerMode = "page"; picker.click(); return;
+        event.preventDefault(); event.stopPropagation();
+        if (image.id === "origin-img" && currentPage === "wiki.html") { openOrigins(); return; }
+        selectElement(image); pickerMode = "page"; picker.click(); return;
+      }
+      if (event.target.closest && event.target.closest("#origin-name,#origin-desc") && currentPage === "wiki.html") {
+        event.preventDefault(); event.stopPropagation(); openOrigins(); return;
       }
       const link = event.target.closest && event.target.closest("a");
       if (link) event.preventDefault();
@@ -160,7 +164,7 @@
   });
   $("delete-button").addEventListener("click", () => {
     if (!selectedElement) return alert("Сначала выбери блок.");
-    const target = selectedElement.closest(".gallery-item,.wiki-card,.rule-chapter") || selectedElement;
+    const target = selectedElement;
     if (target === frame.contentDocument.body || (target.tagName === "SECTION" && target.id === "origins")) return;
     if (!confirm("Удалить выбранный блок?")) return;
     target.remove(); selectedElement = null; markDirty();
@@ -228,7 +232,8 @@
       if (pickerMode === "page" && selectedElement && selectedElement.tagName === "IMG") selectedElement.setAttribute("src", path);
       else if (pickerMode === "origin") $("origin-image-field").value = path;
       else if (pickerMode === "post") $("post-image").value = path;
-      markDirty(); $("post-message").textContent = "Изображение загружено: " + path;
+      if (pickerMode !== "post") markDirty();
+      $("post-message").textContent = "Изображение загружено: " + path;
     } catch (error) { alert(error.message); }
   });
 
@@ -238,7 +243,8 @@
       alert("Открой страницу Вики, чтобы редактировать происхождения."); return;
     }
     origins = JSON.parse(JSON.stringify(frame.contentWindow.__fireonOrigins));
-    activeOrigin = origins.length ? 0 : -1;
+    const current = typeof frame.contentWindow.__fireonCurrentOrigin === "function" ? frame.contentWindow.__fireonCurrentOrigin() : 0;
+    activeOrigin = origins.length ? Math.min(current, origins.length - 1) : -1;
     renderOriginList(); renderOriginForm(); $("origin-modal").hidden = false;
   }
   function renderOriginList() {
