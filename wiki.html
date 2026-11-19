@@ -1073,6 +1073,8 @@
             </div>
         </div>
 
+        <div id="managed-mechanics" class="managed-mechanics-list" aria-live="polite"></div>
+
     </div>
 </section>
 
@@ -1149,7 +1151,6 @@
             const searchInput = document.getElementById('wiki-search');
             const emptyMsg = document.getElementById('wiki-search-empty');
             const rulesEmpty = document.getElementById('wiki-rules-empty');
-            const items = document.querySelectorAll('.wiki-searchable');
             const ruleCards = document.querySelectorAll('#rules .wiki-searchable');
             const collapseAfter = 120;
             let userExpanded = false;
@@ -1209,6 +1210,7 @@
             }
 
             function filterWiki() {
+                const items = document.querySelectorAll('.wiki-searchable');
                 const q = searchInput.value.trim().toLowerCase();
                 let visible = 0;
                 let visibleRules = 0;
@@ -1272,6 +1274,7 @@
             setToolbarExpanded(true);
         })();
     </script>
+    <script src="mechanics.js"></script>
     <script src="site-extras.js"></script>
 </body>
 </html>
