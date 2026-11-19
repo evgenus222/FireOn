@@ -1,78 +1,75 @@
-# FIREON Studio: подключение админ-панели
+# FIREON Studio: настройка парольного входа
 
-Админка находится по адресу:
+FIREON Studio открывается с сайта по адресу:
 
 `https://evgenus222.github.io/FireOn/admin.html`
 
-Она не будет работать до подключения Cloudflare Worker. Это сделано специально: GitHub OAuth и ключи доступа нельзя безопасно хранить в обычном JavaScript на GitHub Pages.
+Сайт остаётся на GitHub Pages. Vercel используется только как небольшой закрытый API для проверки пароля и отправки изменений в GitHub. Cloudflare и Pages CMS не нужны.
 
-## 1. Подготовить Cloudflare Worker
+## 1. Создай серверную часть на Vercel
 
-1. Войди в Cloudflare и открой **Workers & Pages**.
-2. Создай Worker с именем `fireon-admin-api`.
-3. Открой его редактор кода и замени стартовый код содержимым файла `cloudflare/worker.js` из этого репозитория.
-4. Нажми **Deploy**. Запомни адрес Worker, он будет выглядеть примерно так: `https://fireon-admin-api.ТВОЙ-АККАУНТ.workers.dev`.
+1. Открой https://vercel.com/ и войди через GitHub.
+2. Нажми **Add New → Project** и импортируй репозиторий `evgenus222/FireOn`.
+3. В настройках проекта укажи **Root Directory**: `backend`.
+4. Framework Preset: **Other**. Сборка для этого API не требуется.
+5. Нажми Deploy. Если первый деплой завершится ошибкой из-за отсутствующих переменных, добавь переменные из следующего раздела и повтори Deploy.
 
-## 2. Создать KV для сессий
+## 2. Добавь секретные переменные
 
-1. В Cloudflare открой **Storage & databases → KV**.
-2. Создай namespace, например `FIREON_ADMIN_SESSIONS`.
-3. Вернись в Worker → **Settings → Bindings**.
-4. Добавь **KV namespace**:
-   - Variable name: `SESSIONS`
-   - KV namespace: `FIREON_ADMIN_SESSIONS`
+Открой Vercel → Project → Settings → Environment Variables. Добавь:
 
-## 3. Добавить переменные Worker
-
-В Worker открой **Settings → Variables and Secrets** и добавь:
-
-| Имя | Значение |
+| Переменная | Значение |
 |---|---|
+| `ADMIN_PASSWORD` | Придуманный тобой пароль для входа в Studio |
+| `SESSION_SECRET` | Случайная длинная строка не менее 32 символов |
+| `GITHUB_TOKEN` | Fine-grained Personal Access Token из GitHub |
 | `GITHUB_REPO` | `evgenus222/FireOn` |
-| `ALLOWED_GITHUB_USER` | `evgenus222` |
-| `SITE_URL` | `https://evgenus222.github.io/FireOn` |
-| `ADMIN_ORIGIN` | `https://evgenus222.github.io` |
+| `ALLOWED_ORIGIN` | `https://evgenus222.github.io` |
 
-Пока не добавляй `GITHUB_CLIENT_ID` и `GITHUB_CLIENT_SECRET` - они появятся на следующем шаге.
+Для `SESSION_SECRET` можно сгенерировать случайную строку в менеджере паролей. Не используй пароль от GitHub.
 
-## 4. Создать GitHub OAuth App
+**Важно:** `ADMIN_PASSWORD`, `SESSION_SECRET` и `GITHUB_TOKEN` добавляй именно в Environment Variables Vercel, а не в файлы репозитория и не в `admin-config.js`. Vercel хранит эти значения как настройки окружения, серверная функция не отдаёт их посетителям сайта.
 
-1. Открой GitHub → **Settings → Developer settings → OAuth Apps**.
-2. Нажми **New OAuth App**.
-3. Заполни:
-   - Application name: `FIREON Studio`
-   - Homepage URL: `https://evgenus222.github.io/FireOn`
-   - Authorization callback URL: адрес Worker + `/auth/callback`. Например: `https://fireon-admin-api.ТВОЙ-АККАУНТ.workers.dev/auth/callback`
-4. Создай приложение и скопируй **Client ID**.
-5. Нажми **Generate a new client secret** и скопируй секрет.
+### Как создать GitHub Token
 
-Вернись в настройки Worker и добавь:
-- `GITHUB_CLIENT_ID` - обычная переменная со значением Client ID.
-- `GITHUB_CLIENT_SECRET` - именно Secret, не обычная переменная.
+1. Открой GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens.
+2. Нажми **Generate new token**.
+3. Repository access: **Only select repositories** → выбери `FireOn`.
+4. Repository permissions: **Contents: Read and write**.
+5. Создай токен и вставь его в Vercel как `GITHUB_TOKEN`.
 
-Не отправляй Client Secret в чат и не добавляй его в файлы сайта.
+Не присылай токен или пароль в чат. Если токен когда-либо попадёт в публичный файл, отзови его в GitHub и создай новый.
 
-## 5. Подключить Worker к странице админки
+## 3. Подключи адрес API к сайту
 
-Открой `admin-config.js` и замени пример:
+После первого успешного Deploy скопируй домен проекта Vercel, например `https://fireon-studio-api.vercel.app`.
+
+Открой файл `admin-config.js` в репозитории и замени адрес-заглушку на домен своего проекта:
 
 ```js
-window.FIREON_ADMIN_API = "https://YOUR-WORKER.workers.dev";
+window.FIREON_ADMIN_API = "https://fireon-studio-api.vercel.app";
 ```
 
-на реальный адрес своего Worker. Сохрани файл в ветку `main` репозитория.
+Сохрани изменение в ветку `main`. GitHub Pages обновит сайт автоматически.
 
-После публикации сайта открой `https://evgenus222.github.io/FireOn/admin.html` и нажми **Войти через GitHub**.
+## 4. Вход
 
-## Что уже предусмотрено
+Открой:
 
-- В FIREON Studio доступны для визуального редактирования страницы: главная, вики, обновления и инструкция «Как начать».
-- Публикации на главной и странице обновлений управляются отдельно через раздел «Публикации».
-- Войти может только GitHub-аккаунт `evgenus222`.
-- GitHub Client Secret и OAuth-токен не попадают в публичный код сайта.
-- Сессии хранятся в Cloudflare KV и автоматически истекают через 7 дней.
-- Изображения принимаются в PNG, JPG, WEBP и GIF, размером до 5 МБ.
-- Админка сохраняет изменения в репозиторий `evgenus222/FireOn` через GitHub API.
-- После коммита GitHub Pages самостоятельно обновляет публичный сайт.
+`https://evgenus222.github.io/FireOn/admin.html`
 
-Если Worker или OAuth ещё не настроены, админка покажет экран входа с подсказкой, а не откроет редактор без защиты.
+Введи пароль, который указал в переменной `ADMIN_PASSWORD`. Сессия действует 12 часов и хранится в текущей вкладке браузера.
+
+## Как сменить пароль
+
+Vercel → Project → Settings → Environment Variables → измени `ADMIN_PASSWORD` → сохрани → сделай Redeploy последней версии проекта. Старые сессии можно завершить, изменив также `SESSION_SECRET`.
+
+## Что умеет Studio
+
+- Визуально редактировать главную, вики, обновления и страницу «Как начать».
+- Создавать, изменять и удалять публикации.
+- Редактировать происхождения.
+- Загружать изображения.
+- Сохранять изменения напрямую в ветку `main`. После этого GitHub Pages обновляет сайт.
+
+API разрешает изменения только для владельца, у кого есть пароль, и только для перечисленных файлов и папки изображений. Это простая защита от случайных изменений посторонними, а не замена полноценной корпоративной системы безопасности.
