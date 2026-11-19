@@ -100,7 +100,7 @@
       "body.fireon-editor-active .fireon-selected{outline:2px solid #b666d6!important;outline-offset:4px}";
     doc.head.appendChild(style);
     doc.body.classList.add("fireon-editor-active");
-    const selectors = "h1,h2,h3,h4,p,li,.logo,.caption,.wiki-card-title,.contact-info strong,.contact-info a,nav a,.cta .btn-text,.cta .ip-text,.donate-btn,footer p";
+    const selectors = "h1,h2,h3,h4,p,li,.logo,.caption,.wiki-card-title,.rule-item,.wiki-note,.wiki-card-body > div:not(.rule-item),.wiki-card-body > span,.contact-info strong,.contact-info a,nav a,.cta .btn-text,.cta .ip-text,.donate-btn,footer p";
     doc.querySelectorAll(selectors).forEach(el => {
       if (el.closest("script,style,button")) return;
       el.contentEditable = editorEnabled ? "true" : "false";
