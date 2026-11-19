@@ -8,9 +8,10 @@
   const SESSION_KEY = "fireon_admin_session";
 
   function status(message, isDirty) {
-    $("save-status").textContent = message;
-    $("save-status").classList.toggle("dirty", !!isDirty);
-    $("publish-button").disabled = !dirty;
+    const statusEl = $("save-status");
+    const publishEl = $("publish-button");
+    if (statusEl) { statusEl.textContent = message; statusEl.classList.toggle("dirty", !!isDirty); }
+    if (publishEl) publishEl.disabled = !dirty;
   }
   function markDirty() { dirty = true; status("Есть неопубликованные изменения", true); }
   function api(path, options) {
@@ -67,7 +68,7 @@
 
   function setActiveNav(view, page) {
     document.querySelectorAll(".nav-item[data-view]").forEach(button => {
-      button.classList.toggle("active", button.dataset.view === view && (view !== "page" || button.dataset.page === page));
+      if (button && button.classList) button.classList.toggle("active", button.dataset.view === view && (view !== "page" || button.dataset.page === page));
     });
   }
   function loadPage(path, force) {
@@ -137,8 +138,8 @@
     doc.querySelectorAll("[data-fireon-editable]").forEach(el => el.contentEditable = "true");
   }
   function selectElement(el) {
-    if (selectedElement) selectedElement.classList.remove("fireon-selected");
-    selectedElement = el;
+    if (selectedElement && selectedElement.classList) selectedElement.classList.remove("fireon-selected");
+    selectedElement = el && el.classList ? el : null;
     if (selectedElement) selectedElement.classList.add("fireon-selected");
   }
   frame.addEventListener("load", injectEditor);
@@ -167,7 +168,7 @@
   $("duplicate-button").addEventListener("click", () => {
     if (!selectedElement) return alert("Сначала выбери блок.");
     const clone = selectedElement.cloneNode(true);
-    clone.classList.remove("fireon-selected");
+    if (clone.classList) clone.classList.remove("fireon-selected");
     clone.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = "true");
     selectedElement.after(clone); selectElement(clone); markDirty();
   });
