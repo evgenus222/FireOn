@@ -65,7 +65,7 @@
   function loadPage(path, force) {
     if (!force && dirty && !confirm("Есть неопубликованные изменения. Переключиться без сохранения?")) return;
     dirty = false; status("Загрузка страницы…", false); currentPage = path; selectedElement = null;
-    $("view-title").textContent = path === "index.html" ? "Главная страница" : "Вики";
+    $("view-title").textContent = ({ "index.html": "Главная страница", "wiki.html": "Вики", "updates.html": "Обновления", "join.html": "Как начать" })[path] || path;
     $("current-file").textContent = path;
     $("page-editor").hidden = false; $("posts-editor").hidden = true;
     $("preview-button").hidden = false; $("publish-button").hidden = false;
