@@ -177,3 +177,7 @@ module.exports = async (req, res) => {
 
   return send(res, 404, { error: "Маршрут не найден." });
 };
+
+module.exports.config = {
+  api: { bodyParser: { sizeLimit: "4.5mb" } }
+};
