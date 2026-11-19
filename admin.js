@@ -6,11 +6,6 @@
   let currentPage = "index.html", dirty = false, editorEnabled = true, selectedElement = null;
   let pickerMode = "page", posts = [], activePost = -1, origins = [], activeOrigin = -1;
   const SESSION_KEY = "fireon_admin_session";
-  const hashParams = new URLSearchParams(location.hash.slice(1));
-  if (hashParams.has("fireon_session")) {
-    sessionStorage.setItem(SESSION_KEY, hashParams.get("fireon_session"));
-    history.replaceState(null, "", location.pathname + location.search);
-  }
 
   function status(message, isDirty) {
     $("save-status").textContent = message;
@@ -31,8 +26,8 @@
   function showLogin(message) {
     loginScreen.hidden = false; app.hidden = true;
     loginMessage.textContent = message || "Для входа используется твой аккаунт GitHub.";
-    loginButton.disabled = !API || API.includes("YOUR-WORKER");
-    if (loginButton.disabled) loginMessage.textContent = "Сначала нужно подключить Cloudflare Worker. Инструкция будет в файле ADMIN-SETUP.md.";
+    loginButton.disabled = !API || API.includes("YOUR-VERCEL-PROJECT");
+    if (loginButton.disabled) loginMessage.textContent = "Сначала подключи серверную часть по инструкции ADMIN-SETUP.md.";
   }
   async function boot() {
     if (!API || API.includes("YOUR-WORKER")) return showLogin();
@@ -48,11 +43,25 @@
         : "Войдите через GitHub, чтобы открыть редактор.");
     }
   }
-  loginButton.addEventListener("click", () => {
-    if (API && !API.includes("YOUR-WORKER")) location.href = API + "/auth/login";
+  $("login-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const password = $("login-password").value;
+    if (!password || !API || API.includes("YOUR-VERCEL-PROJECT")) return;
+    loginButton.disabled = true;
+    loginMessage.textContent = "Проверяем пароль…";
+    try {
+      const result = await api("/api/login", { method: "POST", body: JSON.stringify({ password }) });
+      sessionStorage.setItem(SESSION_KEY, result.token);
+      $("login-password").value = "";
+      await boot();
+    } catch (error) {
+      loginMessage.textContent = error.message;
+      $("login-password").select();
+    } finally {
+      loginButton.disabled = false;
+    }
   });
-  $("logout-button").addEventListener("click", async () => {
-    try { await api("/api/logout", { method: "POST", body: "{}" }); } catch {}
+  $("logout-button").addEventListener("click", () => {
     sessionStorage.removeItem(SESSION_KEY);
     showLogin("Вы вышли из админ-панели.");
   });
