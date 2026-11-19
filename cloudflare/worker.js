@@ -1,6 +1,6 @@
 const COOKIE = "fireon_admin_session";
 const SESSION_TTL = 60 * 60 * 24 * 7;
-const ALLOWED_PAGES = new Set(["index.html", "wiki.html", "data/mechanics.json"]);
+const ALLOWED_PAGES = new Set(["index.html", "wiki.html", "updates.html", "join.html", "data/mechanics.json"]);
 const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 
 function headers(env, extra = {}) {
