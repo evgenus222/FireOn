@@ -69,6 +69,7 @@
     $("current-file").textContent = path;
     $("page-editor").hidden = false; $("posts-editor").hidden = true;
     $("preview-button").hidden = false; $("publish-button").hidden = false;
+    $("preview-button").textContent = editorEnabled ? "Предпросмотр" : "Вернуться к редактированию";
     $("origins-button").disabled = path !== "wiki.html";
     $("origins-button").style.opacity = path === "wiki.html" ? "1" : ".4";
     setActiveNav("page", path);
@@ -278,6 +279,7 @@
     activeOrigin = origins.length - 1; renderOriginList(); renderOriginForm();
   });
   $("delete-origin-button").addEventListener("click", () => {
+    if (origins.length <= 1) return alert("В списке должно остаться хотя бы одно происхождение.");
     if (activeOrigin < 0 || !confirm("Удалить это происхождение?")) return;
     origins.splice(activeOrigin, 1); activeOrigin = Math.min(activeOrigin, origins.length - 1);
     renderOriginList(); renderOriginForm();
@@ -285,7 +287,7 @@
   $("origin-image-button").addEventListener("click", () => { pickerMode = "origin"; picker.click(); });
   $("close-origin-modal").addEventListener("click", () => {
     applyOriginFields(); frame.contentWindow.__fireonSetOrigins(origins);
-    if (origins.length) markDirty();
+    markDirty();
     $("origin-modal").hidden = true;
   });
 
