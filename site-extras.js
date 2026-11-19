@@ -61,7 +61,7 @@
       score=0;heat=100;running=true;last=0;scoreEl.textContent='0';start.textContent='Заново';core.classList.remove('extinguished');paint();
       result.textContent='Огонь горит. Убирай воду и ветер до столкновения!';spawn();spawnLoop=setInterval(spawn,850);frameLoop=requestAnimationFrame(tick);
     }
-    document.querySelectorAll('.egg-dot').forEach(dot=>{if(dot.dataset.eggReady)return;dot.dataset.eggReady='1';dot.addEventListener('click',()=>overlay.classList.add('open'));});
+    document.querySelectorAll('.egg-dot').forEach(dot=>{if(dot.dataset.eggBound==='1')return;dot.dataset.eggBound='1';const openGame=()=>{overlay.classList.add('open');};dot.addEventListener('click',openGame);dot.addEventListener('pointerup',e=>{if(e.pointerType==='touch')openGame();});});
     start.addEventListener('click',startGame);
     function closeGame(){running=false;clearInterval(spawnLoop);cancelAnimationFrame(frameLoop);hazards.forEach(h=>h.el.remove());hazards=[];overlay.classList.remove('open');}
     close.addEventListener('click',closeGame);overlay.addEventListener('click',e=>{if(e.target===overlay)closeGame()});
