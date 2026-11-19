@@ -1,0 +1,1 @@
+window.FIREON_SERVER=Object.freeze({ip:"fireon.gomc.fun"});
