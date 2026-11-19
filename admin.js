@@ -38,9 +38,8 @@
       loginScreen.hidden = true; app.hidden = false;
       loadPage("index.html", true);
     } catch {
-      showLogin(new URLSearchParams(location.search).get("auth") === "denied"
-        ? "Этот GitHub-аккаунт не добавлен в список администраторов."
-        : "Войдите через GitHub, чтобы открыть редактор.");
+      sessionStorage.removeItem(SESSION_KEY);
+      showLogin("Введи пароль администратора, чтобы открыть редактор.");
     }
   }
   $("login-form").addEventListener("submit", async event => {
