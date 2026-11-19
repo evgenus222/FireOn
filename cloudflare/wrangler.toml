@@ -1,0 +1,13 @@
+name = "fireon-admin-api"
+main = "worker.js"
+compatibility_date = "2026-11-20"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+GITHUB_REPO = "evgenus222/FireOn"
+ALLOWED_GITHUB_USER = "evgenus222"
+SITE_URL = "https://evgenus222.github.io/FireOn"
+ADMIN_ORIGIN = "https://evgenus222.github.io"
