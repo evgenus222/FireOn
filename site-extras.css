@@ -286,3 +286,16 @@ html {
 .egg-actions{display:flex;justify-content:center;gap:10px}
 .egg-start{margin-top:.75rem;padding:.55rem 1.2rem;background:#ff6a00;border:1px solid #ff8a32;color:white;border-radius:8px;font-weight:700;cursor:pointer}
 @keyframes core-flame{from{scale:.92;rotate:-3deg}to{scale:1.08;rotate:3deg}}
+
+/* FIREON mobile navigation and touch fixes */
+@media(max-width:760px){
+  body{padding-top:0!important}
+  header.site-header{padding:0!important}
+  .fire-mobile-toggle{width:42px;height:42px;min-width:42px;display:flex!important;touch-action:manipulation}
+  .egg-dot{width:24px!important;height:24px!important;min-width:24px;min-height:24px;border-radius:50%;vertical-align:middle;touch-action:manipulation;cursor:pointer}
+  .egg-overlay{padding:12px!important;align-items:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .egg-game{width:100%;max-width:430px;max-height:calc(100dvh - 24px);overflow-y:auto;padding:18px!important}
+  .egg-field{height:min(42vh,310px);min-height:210px;touch-action:manipulation}
+  .egg-hazard{width:42px;height:42px;touch-action:manipulation}
+  .egg-actions button{min-height:44px;touch-action:manipulation}
+}
