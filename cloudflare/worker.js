@@ -50,7 +50,11 @@ async function getSession(request, env) {
   const raw = await env.SESSIONS.get("session:" + id);
   if (!raw) return null;
   try {
-    return { id, ...JSON.parse(raw) };
+    const session = JSON.parse(raw);
+    if (!session.accessToken || String(session.login || "").toLowerCase() !== String(env.ALLOWED_GITHUB_USER || "").toLowerCase()) {
+      return null;
+    }
+    return { id, ...session };
   } catch {
     return null;
   }
@@ -204,7 +208,12 @@ export default {
       const original = String(body.name || "image").toLowerCase();
       const extension = mime === "image/jpeg" ? "jpg" : mime === "image/png" ? "png" : mime === "image/webp" ? "webp" : mime === "image/gif" ? "gif" : "";
       if (!ALLOWED_IMAGE_TYPES.has(mime) || !extension) return json({ error: "Поддерживаются PNG, JPG, WEBP и GIF." }, 400, env);
-      if (!base64 || base64.length > 7 * 1024 * 1024) return json({ error: "Изображение должно быть меньше 5 МБ." }, 413, env);
+      if (!base64 || base64.length > 7 * 1024 * 1024 || !/^[A-Za-z0-9+/]+={0,2}$/.test(base64)) {
+        return json({ error: "Некорректное изображение или превышен лимит 5 МБ." }, 413, env);
+      }
+      let decodedSize;
+      try { decodedSize = atob(base64).length; } catch { return json({ error: "Не удалось прочитать изображение." }, 400, env); }
+      if (decodedSize > 5 * 1024 * 1024) return json({ error: "Изображение должно быть меньше 5 МБ." }, 413, env);
       const safeName = original.replace(/\.[^.]+$/, "").replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "image";
       const path = "media/uploads/" + Date.now() + "-" + safeName + "." + extension;
       const result = await saveToGitHub(session, env, path, base64, "Загрузка изображения " + path, true);
