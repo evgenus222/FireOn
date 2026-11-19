@@ -1,0 +1,47 @@
+media:
+  input: media/uploads
+  output: /FireOn/media/uploads
+  rename: safe
+  extensions:
+    - png
+    - jpg
+    - jpeg
+    - webp
+    - gif
+
+content:
+  - name: pages
+    label: Страницы сайта
+    type: group
+    items:
+      - name: home
+        label: Главная
+        type: file
+        path: index.html
+        format: code
+      - name: wiki
+        label: Wiki
+        type: file
+        path: wiki.html
+        format: code
+      - name: updates
+        label: Обновления
+        type: file
+        path: updates.html
+        format: code
+      - name: join
+        label: Как начать играть
+        type: file
+        path: join.html
+        format: code
+
+  - name: content-data
+    label: Материалы
+    type: group
+    items:
+      - name: mechanics
+        label: Публикации и механики
+        type: file
+        path: data/mechanics.json
+        format: json
+        list: true
