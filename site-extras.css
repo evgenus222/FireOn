@@ -253,3 +253,18 @@ html {
     border: 1px solid rgba(255, 106, 0, 0.3);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
+
+/* FIREON secret mini-game refresh */
+.egg-dot{appearance:none;border:0;padding:0;cursor:pointer}
+.egg-dot:focus-visible{outline:2px solid #ff9b56;outline-offset:4px}
+.egg-game{max-width:390px;border-width:1px}
+.egg-kicker{font-size:.58rem;letter-spacing:.2em;color:#8e8179;font-weight:800;margin-bottom:8px}
+.egg-stats{gap:8px;font-size:.76rem}
+.egg-stats strong{color:#ffad74}
+.egg-progress{height:4px;background:#292329;border-radius:9px;overflow:hidden;margin:0 0 10px}
+.egg-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff6a00,#ffd36b);transition:width .25s}
+.egg-field{height:245px;background:radial-gradient(ellipse at center,#171216,#080809 75%)}
+.egg-spark{appearance:none;border:0;padding:0}
+.egg-spark.egg-golden{width:34px;height:34px;margin:-17px 0 0 -17px;background:radial-gradient(circle,#fff 0%,#ffe58a 28%,#ffae00 55%,transparent 72%);box-shadow:0 0 18px #ffc43dcc;animation:egg-gold-pulse .45s ease-in-out infinite alternate}
+.egg-result{min-height:30px;margin:10px 0 0!important;color:#ffbd82!important;font-size:.72rem!important}
+@keyframes egg-gold-pulse{from{transform:scale(.88);filter:brightness(.9)}to{transform:scale(1.18);filter:brightness(1.3)}}
