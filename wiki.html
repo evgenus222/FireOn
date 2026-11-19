@@ -1103,6 +1103,7 @@
         window.__fireonOrigins = origins;
 
         let current = 0;
+        window.__fireonCurrentOrigin = function() { return current; };
 
         function changeOrigin(direction) {
             current = (current + direction + origins.length) % origins.length;
