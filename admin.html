@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>FIREON Studio</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main id="login-screen" class="login-screen" hidden>
+    <div class="login-card">
+      <div class="studio-mark">F</div>
+      <p class="eyebrow">FIREON / CONTROL ROOM</p>
+      <h1>FIREON Studio</h1>
+      <p class="muted">Единое место для управления сайтом сервера.</p>
+      <button id="login-button" class="primary-button">Войти через GitHub</button>
+      <p id="login-message" class="notice"></p>
+    </div>
+  </main>
+
+  <div id="app" class="app" hidden>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">F</span><span>FIREON <small>STUDIO</small></span></a>
+      <div class="side-label">СОДЕРЖИМОЕ</div>
+      <button class="nav-item active" data-view="page" data-page="index.html"><span>⌂</span> Главная</button>
+      <button class="nav-item" data-view="page" data-page="wiki.html"><span>▤</span> Вики</button>
+      <button class="nav-item" data-view="posts"><span>✦</span> Публикации</button>
+      <div class="side-divider"></div>
+      <button id="origins-button" class="nav-item"><span>◈</span> Происхождения</button>
+      <div class="sidebar-bottom">
+        <div class="user-chip"><span class="user-dot"></span><span id="user-login">GitHub</span></div>
+        <button id="logout-button" class="logout-button">Выйти из аккаунта</button>
+        <a class="back-link" href="index.html">← Вернуться на сайт</a>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ПАНЕЛЬ УПРАВЛЕНИЯ</p>
+          <h1 id="view-title">Главная страница</h1>
+        </div>
+        <div class="top-actions">
+          <span id="save-status" class="save-status">Все изменения сохранены</span>
+          <button id="preview-button" class="ghost-button">Предпросмотр</button>
+          <button id="publish-button" class="primary-button" disabled>Опубликовать</button>
+        </div>
+      </header>
+
+      <div id="page-editor" class="editor-layout">
+        <div class="editor-tools">
+          <div class="tool-group">
+            <button data-command="bold" title="Жирный"><b>B</b></button>
+            <button data-command="italic" title="Курсив"><i>I</i></button>
+            <button data-command="underline" title="Подчёркнутый"><u>U</u></button>
+            <button id="link-button" title="Добавить или изменить ссылку">↗ Ссылка</button>
+          </div>
+          <div class="tool-group">
+            <button id="add-text-button">＋ Добавить текст</button>
+            <button id="duplicate-button">Дублировать блок</button>
+            <button id="delete-button" class="danger-tool">Удалить блок</button>
+          </div>
+          <p>Нажми на текст на странице, чтобы изменить его. Нажми на изображение, чтобы заменить.</p>
+        </div>
+        <div class="preview-frame-wrap">
+          <div class="frame-caption"><span class="live-dot"></span> РЕДАКТОР СТРАНИЦЫ <span id="current-file">index.html</span></div>
+          <iframe id="site-frame" title="Предпросмотр сайта"></iframe>
+        </div>
+      </div>
+
+      <section id="posts-editor" class="posts-editor" hidden>
+        <div class="posts-layout">
+          <div class="posts-list-panel">
+            <div class="panel-heading"><div><p class="eyebrow">КОНТЕНТ</p><h2>Публикации</h2></div><button id="new-post-button" class="primary-button small">＋ Новая</button></div>
+            <input id="post-search" class="search-field" type="search" placeholder="Найти публикацию…">
+            <div id="post-list" class="post-list"></div>
+          </div>
+          <div class="post-form-panel">
+            <div class="panel-heading"><div><p class="eyebrow">РЕДАКТОР ЗАПИСИ</p><h2 id="post-form-title">Новая публикация</h2></div><span class="draft-pill">Черновик</span></div>
+            <label>Название<input id="post-title" class="field" placeholder="Например, Новая механика"></label>
+            <div class="field-row">
+              <label>Дата<input id="post-date" class="field" type="date"></label>
+              <label>Теги<input id="post-tags" class="field" placeholder="PvP, механика, ивент"></label>
+            </div>
+            <label>Изображение<div class="image-field"><input id="post-image" class="field" placeholder="media/uploads/image.png"><button id="post-image-button" class="ghost-button">Загрузить</button></div></label>
+            <label>Текст публикации</label>
+            <div class="rich-tools"><button data-post-command="bold"><b>B</b></button><button data-post-command="italic"><i>I</i></button><button data-post-command="insertUnorderedList">• Список</button><button data-post-command="createLink">↗ Ссылка</button></div>
+            <div id="post-body" class="rich-editor" contenteditable="true" data-placeholder="Напиши, что нового появилось на сервере…"></div>
+            <div class="form-actions"><button id="delete-post-button" class="ghost-button danger-text">Удалить</button><button id="save-post-button" class="primary-button">Сохранить публикацию</button></div>
+            <p id="post-message" class="notice"></p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <div id="origin-modal" class="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head"><div><p class="eyebrow">WIKI / ORIGINS</p><h2>Происхождения</h2></div><button id="close-origin-modal" class="icon-button">×</button></div>
+      <div class="origin-layout">
+        <div class="origin-list-panel"><div id="origin-list" class="origin-list"></div><button id="add-origin-button" class="ghost-button full-width">＋ Добавить происхождение</button></div>
+        <div class="origin-fields">
+          <label>Название<input id="origin-name-field" class="field"></label>
+          <label>Описание<textarea id="origin-desc-field" class="field textarea" rows="8"></textarea></label>
+          <label>Изображение<div class="image-field"><input id="origin-image-field" class="field"><button id="origin-image-button" class="ghost-button">Загрузить</button></div></label>
+          <div class="form-actions"><button id="delete-origin-button" class="ghost-button danger-text">Удалить</button><button id="save-origin-button" class="primary-button">Применить</button></div>
+          <p class="muted small-text">Изменения вступят в силу на сайте после общей публикации.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input id="image-picker" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+  <script src="admin-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

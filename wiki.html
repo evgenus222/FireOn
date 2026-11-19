@@ -1083,7 +1083,7 @@
     </footer>
 
     <script>
-        const origins = [
+        const origins = /* FIREON_ORIGINS_START */ [
             { name: "Человек", desc: "• Вы обычный человек\n• У вас нет особых способностей\n• Вы лишины каких либо доп. минусов\n• Ванильный опыт игры", img: "p1.png" },
             { name: "Паукообразный", desc: "• Может взбираться на любые твёрдые поверхности\n• Может карабкаться по паутине, создавать паутину из двух нитей\n• Временно обездвиживать существ в паутине\n• Видит светящийся эффект вокруг существ в паутине\n\n• Может есть только мясо\n• 7 сердечек\n• Получает больше урона и замедляется под «Проклятием членистоногих»", img: "p2.png" },
             { name: "Птичий", desc: "• Медленное падение (если не крадущийся)\n• Может спать только выше Y 86\n• Двигается быстрее\n• Откладывает яйцо, когда спит всю ночь\n\n• Нельзя есть мясо (отравление)", img: "p3.png" },
@@ -1099,9 +1099,11 @@
             { name: "Некромант", desc: "• Нежить атакует врагов\n• Возрождение мёртвых игроков\n• +здоровье и урон в Нижнем мире\n• Нежить не атакует\n\n• Жители не торгуют\n• 3 сердца в воде", img: "p13.png" },
             { name: "Дух", desc: "• Не фиксируется Sculk\n• Невидим при неподвижности\n• +здоровье и урон в Нижнем мире\n\n• 3 сердца в воде", img: "p14.png" },
             { name: "Повелитель Теней", desc: "• Невидим в темноте\n• +урон в темноте, −урон на свету\n\n• Воспламеняется от света\n• ×2 урон от огня\n• Нет огнестойкости\n• 3 сердца в воде", img: "p15.png" }
-        ];
+        ] /* FIREON_ORIGINS_END */;
+        window.__fireonOrigins = origins;
 
         let current = 0;
+        window.__fireonCurrentOrigin = function() { return current; };
 
         function changeOrigin(direction) {
             current = (current + direction + origins.length) % origins.length;
@@ -1129,6 +1131,12 @@
 
             updateDots();
         }
+
+        window.__fireonSetOrigins = function(next) {
+            origins.splice(0, origins.length, ...next);
+            current = 0;
+            updateOrigin();
+        };
 
         function updateDots() {
             const dotsContainer = document.getElementById('dots');
