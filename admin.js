@@ -15,7 +15,7 @@
   function markDirty() { dirty = true; status("Есть неопубликованные изменения", true); }
   function api(path, options) {
     return fetch(API + path, {
-      credentials: "include", ...options,
+      credentials: "omit", ...options,
       headers: { "Content-Type": "application/json", ...(sessionStorage.getItem(SESSION_KEY) ? { "Authorization": "Bearer " + sessionStorage.getItem(SESSION_KEY) } : {}), ...(options && options.headers || {}) }
     }).then(async response => {
       const data = await response.json().catch(() => ({}));
@@ -25,12 +25,12 @@
   }
   function showLogin(message) {
     loginScreen.hidden = false; app.hidden = true;
-    loginMessage.textContent = message || "Для входа используется твой аккаунт GitHub.";
+    loginMessage.textContent = message || "Введи пароль администратора, чтобы открыть редактор.";
     loginButton.disabled = !API || API.includes("YOUR-VERCEL-PROJECT");
     if (loginButton.disabled) loginMessage.textContent = "Сначала подключи серверную часть по инструкции ADMIN-SETUP.md.";
   }
   async function boot() {
-    if (!API || API.includes("YOUR-WORKER")) return showLogin();
+    if (!API || API.includes("YOUR-VERCEL-PROJECT")) return showLogin();
     try {
       const me = await api("/api/me");
       if (!me.authenticated) return showLogin();
@@ -224,7 +224,7 @@
 
   async function uploadImage(file) {
     if (!file) return null;
-    if (file.size > 5 * 1024 * 1024) throw new Error("Изображение должно быть меньше 5 МБ.");
+    if (file.size > 3 * 1024 * 1024) throw new Error("Изображение должно быть меньше 3 МБ.");
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result).split(",")[1]);
