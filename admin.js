@@ -10,7 +10,7 @@
   function status(message, isDirty) {
     const statusEl = $("save-status");
     const publishEl = $("publish-button");
-    if (statusEl) { statusEl.textContent = message; statusEl.classList.toggle("dirty", !!isDirty); }
+    if (statusEl) { statusEl.textContent = message; statusEl.classList?.toggle("dirty", !!isDirty); }
     if (publishEl) publishEl.disabled = !dirty;
   }
   function markDirty() { dirty = true; status("Есть неопубликованные изменения", true); }
@@ -68,7 +68,7 @@
 
   function setActiveNav(view, page) {
     document.querySelectorAll(".nav-item[data-view]").forEach(button => {
-      if (button && button.classList) button.classList.toggle("active", button.dataset.view === view && (view !== "page" || button.dataset.page === page));
+      if (button?.classList) button.classList.toggle("active", button.dataset.view === view && (view !== "page" || button.dataset.page === page));
     });
   }
   function loadPage(path, force) {
@@ -100,7 +100,7 @@
       "body.fireon-editor-active img:hover{outline:2px solid #b666d6}" +
       "body.fireon-editor-active .fireon-selected{outline:2px solid #b666d6!important;outline-offset:4px}";
     doc.head.appendChild(style);
-    doc.body.classList.add("fireon-editor-active");
+    doc.body?.classList?.add("fireon-editor-active");
     const selectors = "h1,h2,h3,h4,p,li,.logo,.caption,.wiki-card-title,.rule-item,.wiki-note,.wiki-card-body > div:not(.rule-item),.wiki-card-body > span,.contact-info strong,.contact-info a,nav a,.cta .btn-text,.cta .ip-text,.donate-btn,footer p";
     doc.querySelectorAll(selectors).forEach(el => {
       if (el.closest("script,style,button")) return;
@@ -130,7 +130,7 @@
     dirty = false; status("Страница готова к редактированию", false);
   }
   function disableEditing(doc) {
-    doc.body.classList.remove("fireon-editor-active");
+    doc.body?.classList?.remove("fireon-editor-active");
     doc.querySelectorAll("[data-fireon-editable]").forEach(el => el.contentEditable = "false");
   }
   function enableEditing(doc) {
@@ -138,9 +138,9 @@
     doc.querySelectorAll("[data-fireon-editable]").forEach(el => el.contentEditable = "true");
   }
   function selectElement(el) {
-    if (selectedElement && selectedElement.classList) selectedElement.classList.remove("fireon-selected");
-    selectedElement = el && el.classList ? el : null;
-    if (selectedElement) selectedElement.classList.add("fireon-selected");
+    if (selectedElement?.classList) selectedElement.classList.remove("fireon-selected");
+    selectedElement = el?.classList ? el : null;
+    if (selectedElement?.classList) selectedElement.classList.add("fireon-selected");
   }
   frame.addEventListener("load", injectEditor);
 
@@ -168,7 +168,7 @@
   $("duplicate-button").addEventListener("click", () => {
     if (!selectedElement) return alert("Сначала выбери блок.");
     const clone = selectedElement.cloneNode(true);
-    if (clone.classList) clone.classList.remove("fireon-selected");
+    clone.classList?.remove("fireon-selected");
     clone.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = "true");
     selectedElement.after(clone); selectElement(clone); markDirty();
   });
@@ -195,12 +195,12 @@
   function cleanHtml() {
     const clone = frame.contentDocument.documentElement.cloneNode(true);
     clone.querySelector("#fireon-editor-style")?.remove();
-    clone.body.classList.remove("fireon-editor-active");
+    clone.body?.classList?.remove("fireon-editor-active");
     clone.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
     clone.querySelectorAll("[data-fireon-editable],[data-fireon-image]").forEach(el => {
       el.removeAttribute("data-fireon-editable"); el.removeAttribute("data-fireon-image");
     });
-    clone.querySelectorAll(".fireon-selected").forEach(el => el.classList.remove("fireon-selected"));
+    clone.querySelectorAll(".fireon-selected").forEach(el => el.classList?.remove("fireon-selected"));
     let html = "<!DOCTYPE html>\n" + clone.outerHTML;
     if (currentPage === "wiki.html" && frame.contentWindow.__fireonOrigins) {
       const data = JSON.stringify(frame.contentWindow.__fireonOrigins, null, 4).replace(/<\/script/gi, "<\\/script");
