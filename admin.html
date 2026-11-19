@@ -15,8 +15,12 @@
       <p class="eyebrow">FIREON / CONTROL ROOM</p>
       <h1>FIREON Studio</h1>
       <p class="muted">Единое место для управления сайтом сервера.</p>
-      <button id="login-button" class="primary-button">Войти через GitHub</button>
-      <p id="login-message" class="notice"></p>
+      <form id="login-form" class="login-form">
+        <label class="sr-only" for="login-password">Пароль администратора</label>
+        <input id="login-password" class="field" type="password" autocomplete="current-password" placeholder="Пароль администратора" required>
+        <button id="login-button" class="primary-button" type="submit">Войти в Studio</button>
+      </form>
+      <p id="login-message" class="notice">Доступ только для владельца FIREON.</p>
     </div>
   </main>
 
