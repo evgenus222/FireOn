@@ -5,6 +5,12 @@
   const loginButton = $("login-button"), frame = $("site-frame"), picker = $("image-picker");
   let currentPage = "index.html", dirty = false, editorEnabled = true, selectedElement = null;
   let pickerMode = "page", posts = [], activePost = -1, origins = [], activeOrigin = -1;
+  const SESSION_KEY = "fireon_admin_session";
+  const hashParams = new URLSearchParams(location.hash.slice(1));
+  if (hashParams.has("fireon_session")) {
+    sessionStorage.setItem(SESSION_KEY, hashParams.get("fireon_session"));
+    history.replaceState(null, "", location.pathname + location.search);
+  }
 
   function status(message, isDirty) {
     $("save-status").textContent = message;
@@ -15,7 +21,7 @@
   function api(path, options) {
     return fetch(API + path, {
       credentials: "include", ...options,
-      headers: { "Content-Type": "application/json", ...(options && options.headers || {}) }
+      headers: { "Content-Type": "application/json", ...(sessionStorage.getItem(SESSION_KEY) ? { "Authorization": "Bearer " + sessionStorage.getItem(SESSION_KEY) } : {}), ...(options && options.headers || {}) }
     }).then(async response => {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "Ошибка запроса (" + response.status + ")");
@@ -47,6 +53,7 @@
   });
   $("logout-button").addEventListener("click", async () => {
     try { await api("/api/logout", { method: "POST", body: "{}" }); } catch {}
+    sessionStorage.removeItem(SESSION_KEY);
     showLogin("Вы вышли из админ-панели.");
   });
 
@@ -91,7 +98,7 @@
       el.spellcheck = true; el.dataset.fireonEditable = "1";
     });
     doc.querySelectorAll("img").forEach(img => {
-      img.dataset.fireonImage = "1"; img.title = "Нажми, чтобы заменить изображение";
+      img.dataset.fireonImage = "1";
     });
     doc.addEventListener("input", markDirty);
     doc.addEventListener("click", event => {
@@ -177,7 +184,7 @@
     clone.body.classList.remove("fireon-editor-active");
     clone.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
     clone.querySelectorAll("[data-fireon-editable],[data-fireon-image]").forEach(el => {
-      el.removeAttribute("data-fireon-editable"); el.removeAttribute("data-fireon-image"); el.removeAttribute("title");
+      el.removeAttribute("data-fireon-editable"); el.removeAttribute("data-fireon-image");
     });
     clone.querySelectorAll(".fireon-selected").forEach(el => el.classList.remove("fireon-selected"));
     let html = "<!DOCTYPE html>\n" + clone.outerHTML;
