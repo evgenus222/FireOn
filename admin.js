@@ -155,6 +155,20 @@
     const url = prompt("Вставь адрес ссылки:");
     if (url) { doc.execCommand("createLink", false, url); markDirty(); }
   });
+  $("insert-image-button").addEventListener("click", () => {
+    if (currentPage !== "wiki.html") return alert("Открой Вики, чтобы вставить изображение в блок.");
+    pickerMode = "page-inline"; picker.click();
+  });
+  $("add-wiki-block-button").addEventListener("click", () => {
+    if (currentPage !== "wiki.html") return alert("Новый блок можно добавить на странице Вики.");
+    const doc = frame.contentDocument;
+    const container = selectedElement?.closest?.(".wiki-plugins-container") || doc.querySelector(".wiki-plugins-container");
+    if (!container) return alert("Не удалось найти область карточек Вики.");
+    const card = doc.createElement("article"); card.className = "wiki-card rule-chapter wiki-searchable";
+    card.innerHTML = '<div class="wiki-card-title">Новый раздел</div><div class="wiki-card-body"><p>Добавь описание нового раздела. Нажми на текст, чтобы изменить его.</p></div>';
+    card.querySelectorAll(".wiki-card-title,p").forEach(el => { el.contentEditable = "true"; el.dataset.fireonEditable = "1"; });
+    container.appendChild(card); selectElement(card.querySelector(".wiki-card-title")); markDirty(); card.scrollIntoView({behavior:"smooth",block:"center"});
+  });
   $("add-text-button").addEventListener("click", () => {
     if (!selectedElement) return alert("Сначала нажми на раздел, в который нужно добавить текст.");
     const doc = frame.contentDocument;
@@ -240,9 +254,26 @@
     try {
       const path = await uploadImage(file);
       if (pickerMode === "page" && selectedElement && selectedElement.tagName === "IMG") selectedElement.setAttribute("src", path);
+      else if (pickerMode === "page-inline") {
+        const doc = frame.contentDocument;
+        const container = selectedElement?.closest?.(".wiki-card-body,.wiki-card,.wiki-plugins-container,.wiki-content") || doc.querySelector(".wiki-plugins-container") || doc.querySelector(".wiki-content");
+        if (!container) throw new Error("Не найден блок для изображения. Сначала выбери карточку в Вики.");
+        const img = doc.createElement("img"); img.src = path; img.alt = "Иллюстрация"; img.loading = "lazy";
+        img.style.cssText = "display:block;width:100%;max-height:360px;object-fit:cover;border-radius:16px;margin:18px 0;box-shadow:0 12px 32px rgba(0,0,0,.22)";
+        container.appendChild(img); selectElement(img);
+      }
       else if (pickerMode === "origin") $("origin-image-field").value = path;
       else if (pickerMode === "post") $("post-image").value = path;
+      else if (pickerMode === "post-inline") {
+        $("post-body").focus();
+        const img = document.createElement("img"); img.src = path; img.alt = "Иллюстрация";
+        img.style.cssText = "display:block;max-width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:14px;margin:16px auto";
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount && $("post-body").contains(sel.anchorNode)) sel.getRangeAt(0).insertNode(img);
+        else $("post-body").appendChild(img);
+      }
       if (pickerMode !== "post") markDirty();
+      if (pickerMode === "post" || pickerMode === "post-inline") updatePostImagePreview();
       $("post-message").textContent = "Изображение загружено: " + path;
     } catch (error) { alert(error.message); }
   });
@@ -281,17 +312,17 @@
     origins[activeOrigin] = { name: $("origin-name-field").value.trim(), desc: $("origin-desc-field").value, img: $("origin-image-field").value.trim() };
   }
   $("save-origin-button").addEventListener("click", () => {
-    applyOriginFields(); frame.contentWindow.__fireonSetOrigins(origins); renderOriginList(); markDirty();
+    applyOriginFields(); frame.contentWindow.__fireonSetOrigins(origins); renderOriginList(); renderOriginForm(); markDirty();
   });
   $("add-origin-button").addEventListener("click", () => {
-    applyOriginFields(); origins.push({ name: "Новое происхождение", desc: "Описание происхождения", img: "p1.png" });
-    activeOrigin = origins.length - 1; renderOriginList(); renderOriginForm();
+    applyOriginFields(); origins.push({ name: "Новое происхождение", desc: "Описание происхождения", img: "" });
+    activeOrigin = origins.length - 1; frame.contentWindow.__fireonSetOrigins(origins); renderOriginList(); renderOriginForm(); markDirty();
   });
   $("delete-origin-button").addEventListener("click", () => {
     if (origins.length <= 1) return alert("В списке должно остаться хотя бы одно происхождение.");
     if (activeOrigin < 0 || !confirm("Удалить это происхождение?")) return;
     origins.splice(activeOrigin, 1); activeOrigin = Math.min(activeOrigin, origins.length - 1);
-    renderOriginList(); renderOriginForm();
+    frame.contentWindow.__fireonSetOrigins(origins); renderOriginList(); renderOriginForm(); markDirty();
   });
   $("origin-image-button").addEventListener("click", () => { pickerMode = "origin"; picker.click(); });
   $("close-origin-modal").addEventListener("click", () => {
@@ -319,17 +350,22 @@
     });
     if (!list.children.length) list.textContent = "Публикаций пока нет.";
   }
+  function updatePostImagePreview() {
+    const preview = $("post-image-preview"), src = $("post-image").value.trim();
+    preview.hidden = !src; preview.innerHTML = "";
+    if (src) { const img = document.createElement("img"); img.src = src; img.alt = "Предпросмотр обложки"; preview.appendChild(img); }
+  }
   function selectPost(index) {
     activePost = index; const post = posts[index] || {};
     $("post-form-title").textContent = "Редактирование публикации";
     $("post-title").value = post.title || ""; $("post-date").value = post.date || "";
-    $("post-tags").value = (post.tags || []).join(", "); $("post-image").value = post.image || "";
+    $("post-tags").value = (post.tags || []).join(", "); $("post-image").value = post.image || ""; updatePostImagePreview();
     $("post-body").innerHTML = post.body || ""; $("delete-post-button").disabled = false; renderPostList();
   }
   function newPost() {
     activePost = -1; $("post-form-title").textContent = "Новая публикация";
     $("post-title").value = ""; $("post-date").value = new Date().toISOString().slice(0, 10);
-    $("post-tags").value = ""; $("post-image").value = ""; $("post-body").innerHTML = "";
+    $("post-tags").value = ""; $("post-image").value = ""; updatePostImagePreview(); $("post-body").innerHTML = "";
     $("delete-post-button").disabled = true; renderPostList();
   }
   async function persistPosts() {
@@ -359,9 +395,13 @@
     } catch (error) { posts = previous; $("post-message").textContent = error.message; }
   });
   $("post-image-button").addEventListener("click", () => { pickerMode = "post"; picker.click(); });
+  $("post-image").addEventListener("input", updatePostImagePreview);
+  $("post-inline-image-button").addEventListener("click", () => { pickerMode = "post-inline"; picker.click(); });
+  $("post-body").addEventListener("input", () => { $("post-message").textContent = "Есть несохранённые изменения"; });
   document.querySelectorAll("[data-post-command]").forEach(button => button.addEventListener("click", () => {
     $("post-body").focus(); const command = button.dataset.postCommand;
     if (command === "createLink") { const url = prompt("Адрес ссылки:"); if (url) document.execCommand(command, false, url); }
+    else if (command === "formatBlock") document.execCommand(command, false, button.dataset.postValue || "h2");
     else document.execCommand(command, false, null);
   }));
 
