@@ -42,3 +42,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
   .editor-tools{gap:7px}
   .tool-group{padding-right:6px}
 }
+
+#add-wiki-block-button,#insert-image-button{transition:.2s ease}
+#add-wiki-block-button:hover,#insert-image-button:hover{background:rgba(255,106,0,.12);border-color:rgba(255,106,0,.55)}
+.post-image-preview{box-shadow:0 12px 30px #0004}
