@@ -65,6 +65,8 @@
           </div>
           <div class="tool-group">
             <button id="add-text-button">＋ Добавить текст</button>
+            <button id="add-wiki-block-button">▦ Новый блок в Вики</button>
+            <button id="insert-image-button">▧ Вставить фото</button>
             <button id="duplicate-button">Дублировать блок</button>
             <button id="delete-button" class="danger-tool">Удалить блок</button>
           </div>
@@ -90,9 +92,9 @@
               <label>Дата<input id="post-date" class="field" type="date"></label>
               <label>Теги<input id="post-tags" class="field" placeholder="PvP, механика, ивент"></label>
             </div>
-            <label>Изображение<div class="image-field"><input id="post-image" class="field" placeholder="media/uploads/image.png"><button id="post-image-button" class="ghost-button">Загрузить</button></div></label>
+            <label>Обложка публикации<div class="image-field"><input id="post-image" class="field" placeholder="media/uploads/image.png"><button id="post-image-button" class="ghost-button">Загрузить</button></div><div id="post-image-preview" class="post-image-preview" hidden></div></label>
             <label>Текст публикации</label>
-            <div class="rich-tools"><button data-post-command="bold"><b>B</b></button><button data-post-command="italic"><i>I</i></button><button data-post-command="insertUnorderedList">• Список</button><button data-post-command="createLink">↗ Ссылка</button></div>
+            <div class="rich-tools"><button data-post-command="bold"><b>B</b></button><button data-post-command="italic"><i>I</i></button><button data-post-command="formatBlock" data-post-value="h2">H2 Заголовок</button><button data-post-command="insertUnorderedList">• Список</button><button data-post-command="formatBlock" data-post-value="blockquote">❝ Цитата</button><button data-post-command="createLink">↗ Ссылка</button><button id="post-inline-image-button">▧ Фото в текст</button></div>
             <div id="post-body" class="rich-editor" contenteditable="true" data-placeholder="Напиши, что нового появилось на сервере…"></div>
             <div class="form-actions"><button id="delete-post-button" class="ghost-button danger-text">Удалить</button><button id="save-post-button" class="primary-button">Сохранить публикацию</button></div>
             <p id="post-message" class="notice"></p>
